@@ -1,16 +1,19 @@
 # EcoTrips Women
 
-Site vitrine statique pour EcoTrips Women, une agence marocaine feminine de voyages en groupe.
+Application Next.js pour EcoTrips Women, une agence marocaine feminine de voyages en groupe.
 
 ## Contenu
 
-- Page d'accueil inspiree de l'univers WOW Club
-- Sections hero, avantages, fonctionnement, offres, chiffres, avis et contact
-- Offres integrees depuis les annonces fournies:
-  - Nador - El Houceima
-  - Camping Boujimil
-  - Belyounech - Boujimil - Fnideq
+- Interface en francais
+- Sections hero, avantages, offres, fonctionnement, videos, Instagram, voyages signature et contact
+- QR code vers Instagram: `https://www.instagram.com/ecotrips_women`
+- Emplacements prevus pour ajouter des videos plus tard
 
 ## Lancer localement
 
-Ouvrir `index.html` dans un navigateur.
+```bash
+npm install
+npm run dev
+```
+
+Puis ouvrir `http://localhost:3000`.
