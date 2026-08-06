@@ -13,10 +13,10 @@ const trips = [
     badge: "Vente flash",
     badgeClass: "",
     title: "Nador - El Houceima",
-    date: "14 - 16 aout",
-    departure: "Depart Tanger - Tetouan",
+    date: "14 - 16 août",
+    departure: "Départ Tanger - Tétouan",
     price: "999 DHS",
-    message: "Bonjour EcoTrips Women, je veux reserver Nador El Houceima",
+    message: "Bonjour EcoTrips Women, je veux réserver Nador El Houceima",
   },
   {
     image: "/assets/offre-camping-boujimil.png",
@@ -24,10 +24,10 @@ const trips = [
     badge: "Camping",
     badgeClass: "yellow",
     title: "Camping Boujimil",
-    date: "08 - 09 aout",
-    departure: "Depart Tanger - Tetouan",
+    date: "08 - 09 août",
+    departure: "Départ Tanger - Tétouan",
     price: "499 DHS",
-    message: "Bonjour EcoTrips Women, je veux reserver Camping Boujimil",
+    message: "Bonjour EcoTrips Women, je veux réserver Camping Boujimil",
   },
   {
     image: "/assets/offre-belyounech-boujimil-fnideq.png",
@@ -35,10 +35,10 @@ const trips = [
     badge: "Promotion",
     badgeClass: "blue",
     title: "Belyounech - Boujimil - Fnideq",
-    date: "07 - 09 aout",
-    departure: "Depart Rabat - Sale",
+    date: "07 - 09 août",
+    departure: "Départ Rabat - Salé",
     price: "999 DH",
-    message: "Bonjour EcoTrips Women, je veux reserver Belyounech Boujimil Fnideq",
+    message: "Bonjour EcoTrips Women, je veux réserver Belyounech Boujimil Fnideq",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function HomePage() {
     event.preventDefault();
     const email = new FormData(event.currentTarget).get("email") || "";
     window.location.href = whatsappLink(
-      `Bonjour EcoTrips Women, je veux recevoir les prochaines sorties. Email: ${email}`
+      `Bonjour EcoTrips Women, je veux recevoir les prochaines sorties. E-mail: ${email}`
     );
   }
 
@@ -78,14 +78,14 @@ export default function HomePage() {
             Fonctionnement
           </a>
           <a href="#videos" onClick={closeMenu}>
-            Videos
+            Vidéos
           </a>
           <a href="#contact" onClick={closeMenu}>
             Contact
           </a>
         </nav>
-        <a className="header-cta" href={whatsappLink("Bonjour EcoTrips Women, je veux reserver une place")}>
-          Reserver
+        <a className="header-cta" href={whatsappLink("Bonjour EcoTrips Women, je veux réserver une place")}>
+          Réserver
         </a>
         <button
           className="menu-toggle"
@@ -103,8 +103,8 @@ export default function HomePage() {
         <section className="hero" aria-labelledby="hero-title">
           <Image
             className="hero-photo"
-            src="/assets/hero-morocco.jpg"
-            alt="Cote marocaine avec bateaux"
+            src="/assets/hero-ecotrips-women.jpg"
+            alt="Groupe de voyageuses EcoTrips Women dans la neige"
             fill
             priority
             sizes="(max-width: 1180px) calc(100vw - 32px), 1180px"
@@ -115,9 +115,9 @@ export default function HomePage() {
             <h1 id="hero-title">
               Pars seule, <span>mais jamais seule</span>
             </h1>
-            <p>Voyages 100% femmes au Maroc, organises avec transport, activites et accompagnement.</p>
+            <p>Voyages 100% femmes au Maroc, organisés avec transport, activités et accompagnement.</p>
             <a className="primary-btn" href="#offres">
-              Voir les departs
+              Voir les départs
             </a>
           </div>
         </section>
@@ -125,27 +125,27 @@ export default function HomePage() {
         <section className="promise-strip" aria-label="Pourquoi voyager avec EcoTrips Women">
           <article>
             <strong>100% femmes</strong>
-            <p>Groupes feminins, ambiance bienveillante et accompagnement.</p>
+            <p>Groupes féminins, ambiance bienveillante et accompagnement.</p>
           </article>
           <article>
             <strong>Transport inclus</strong>
-            <p>Depart selon l&apos;offre: Tanger, Tetouan, Rabat ou Sale.</p>
+            <p>Départ selon l&apos;offre: Tanger, Tétouan, Rabat ou Salé.</p>
           </article>
           <article>
             <strong>Nature et mer</strong>
-            <p>Plages, randonnees, piscine, camping et villages cotiers.</p>
+            <p>Plages, randonnées, piscine, camping et villages côtiers.</p>
           </article>
           <article>
-            <strong>Places limitees</strong>
-            <p>Reservation directe par WhatsApp avec l&apos;equipe EcoTrips.</p>
+            <strong>Places limitées</strong>
+            <p>Réservation directe par WhatsApp avec l&apos;équipe EcoTrips.</p>
           </article>
         </section>
 
         <section className="section trips" id="offres">
           <div className="section-title centered">
-            <p className="eyebrow">Prochains departs</p>
+            <p className="eyebrow">Prochains départs</p>
             <h2>
-              Voyages <span>a venir</span>
+              Voyages <span>à venir</span>
             </h2>
           </div>
           <div className="trip-grid">
@@ -159,7 +159,7 @@ export default function HomePage() {
                     {trip.date} · {trip.departure}
                   </p>
                   <strong>{trip.price}</strong>
-                  <a href={whatsappLink(trip.message)}>Reserver</a>
+                  <a href={whatsappLink(trip.message)}>Réserver</a>
                 </div>
               </article>
             ))}
@@ -170,30 +170,30 @@ export default function HomePage() {
           <div className="section-title centered">
             <p className="eyebrow">Simple et rassurant</p>
             <h2>
-              Comment ca <span>marche</span>
+              Comment ça <span>marche</span>
             </h2>
-            <p>Tu choisis ton voyage, EcoTrips Women gere les details essentiels.</p>
+            <p>Tu choisis ton voyage, EcoTrips Women gère les détails essentiels.</p>
           </div>
           <div className="steps">
             <article>
               <span>1</span>
               <h3>Choisis ton voyage</h3>
-              <p>Mer, camping, randonnee ou week-end detente.</p>
+              <p>Mer, camping, randonnée ou week-end détente.</p>
             </article>
             <article>
               <span>2</span>
-              <h3>Reserve sur WhatsApp</h3>
-              <p>Confirme ta place, ton depart et les infos pratiques.</p>
+              <h3>Réserve sur WhatsApp</h3>
+              <p>Confirme ta place, ton départ et les infos pratiques.</p>
             </article>
             <article>
               <span>3</span>
-              <h3>Voyage accompagnee</h3>
-              <p>Transport touristique, activites et groupe feminin.</p>
+              <h3>Voyage accompagnée</h3>
+              <p>Transport touristique, activités et groupe féminin.</p>
             </article>
             <article>
               <span>4</span>
               <h3>Partage tes souvenirs</h3>
-              <p>Photos, videos, souvenirs et nouvelles amities.</p>
+              <p>Photos, vidéos, souvenirs et nouvelles amitiés.</p>
             </article>
           </div>
           <div className="stats-row">
@@ -211,7 +211,7 @@ export default function HomePage() {
             </div>
             <div>
               <strong>4</strong>
-              <span>ambiances: mer, nature, camping, detente</span>
+              <span>ambiances: mer, nature, camping, détente</span>
             </div>
           </div>
         </section>
@@ -220,25 +220,25 @@ export default function HomePage() {
           <div className="section-title centered">
             <p className="eyebrow">Moments de voyage</p>
             <h2>
-              Videos de <span>voyageuses</span>
+              Vidéos de <span>voyageuses</span>
             </h2>
           </div>
           <div className="video-row">
             <article className="video-placeholder small">
-              <span>Emplacement video reel</span>
+              <span>Emplacement vidéo réel</span>
             </article>
             <article className="video-placeholder tall">
-              <span>Emplacement video temoignage</span>
+              <span>Emplacement vidéo témoignage</span>
             </article>
             <article className="video-placeholder small alt">
-              <span>Emplacement video voyage</span>
+              <span>Emplacement vidéo voyage</span>
             </article>
           </div>
         </section>
 
         <section className="community-band">
           <div>
-            <p className="eyebrow">Communaute</p>
+            <p className="eyebrow">Communauté</p>
             <h2>
               Rejoins-nous <span>sur Instagram</span>
             </h2>
@@ -256,7 +256,7 @@ export default function HomePage() {
             <h2>
               Voyages <span>signature</span>
             </h2>
-            <p>Les annonces importantes restent visibles avec prix, dates et lien de reservation.</p>
+            <p>Les annonces importantes restent visibles avec prix, dates et lien de réservation.</p>
           </div>
           <div className="signature-strip">
             {trips.map((trip) => (
@@ -276,7 +276,7 @@ export default function HomePage() {
             <h2>
               EcoTrips peut <span>t&apos;emmener loin</span>
             </h2>
-            <p>Pour recevoir les prochaines sorties ou reserver une place, contacte directement l&apos;equipe.</p>
+            <p>Pour recevoir les prochaines sorties ou réserver une place, contacte directement l&apos;équipe.</p>
             <form className="contact-form" onSubmit={handleSubmit}>
               <input type="email" name="email" placeholder="Ton email" aria-label="Ton email" />
               <button type="submit">Envoyer</button>
@@ -305,13 +305,13 @@ export default function HomePage() {
           <div className="archive-grid">
             <article className="memory-card large">
               <div className="video-placeholder memory">
-                <span>Emplacement video souvenir grand format</span>
+                <span>Emplacement vidéo souvenir grand format</span>
               </div>
               <h3>Sorties entre femmes au Maroc</h3>
             </article>
             <article className="memory-card">
               <div className="video-placeholder memory dark">
-                <span>Emplacement story video</span>
+                <span>Emplacement story vidéo</span>
               </div>
               <h3>Train, plage ou montagne</h3>
             </article>
@@ -322,25 +322,25 @@ export default function HomePage() {
           <div className="section-title centered">
             <p className="eyebrow">Formats de voyage</p>
             <h2>
-              Plusieurs facons <span>d&apos;explorer</span>
+              Plusieurs façons <span>d&apos;explorer</span>
             </h2>
           </div>
           <div className="ways-grid">
             <article>
               <Image src="/assets/hero-morocco.jpg" alt="Voyages entre femmes" width={1800} height={980} sizes="(max-width: 1080px) 100vw, 50vw" />
-              <h3>Voyages en groupe feminin</h3>
+              <h3>Voyages en groupe féminin</h3>
               <p>Sorties ouvertes aux voyageuses qui veulent rejoindre un groupe.</p>
             </article>
             <article>
               <Image
                 src="/assets/brand-cover.png"
-                alt="Itineraires personnalises"
+                alt="Itinéraires personnalisés"
                 width={1080}
                 height={1080}
                 sizes="(max-width: 1080px) 100vw, 50vw"
               />
-              <h3>Itineraires sur mesure</h3>
-              <p>Programmes personnalises pour un groupe prive.</p>
+              <h3>Itinéraires sur mesure</h3>
+              <p>Programmes personnalisés pour un groupe privé.</p>
             </article>
           </div>
         </section>
@@ -349,7 +349,7 @@ export default function HomePage() {
       <footer className="site-footer">
         <div className="footer-claim">
           <p>
-            on t&apos;aide <span>a</span>
+            on t&apos;aide <span>à</span>
           </p>
           <p>explorer le Maroc</p>
         </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
         <nav aria-label="Pied de page">
           <a href="#offres">Offres</a>
           <a href="#fonctionnement">Fonctionnement</a>
-          <a href="#videos">Videos</a>
+          <a href="#videos">Vidéos</a>
           <a href="#contact">Contact</a>
         </nav>
       </footer>

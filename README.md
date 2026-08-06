@@ -1,13 +1,13 @@
 # EcoTrips Women
 
-Application Next.js pour EcoTrips Women, une agence marocaine feminine de voyages en groupe.
+Application Next.js pour EcoTrips Women, une agence marocaine féminine de voyages en groupe.
 
 ## Contenu
 
-- Interface en francais
-- Sections hero, avantages, offres, fonctionnement, videos, Instagram, voyages signature et contact
+- Interface en français
+- Sections hero, avantages, offres, fonctionnement, vidéos, Instagram, voyages signature et contact
 - QR code vers Instagram: `https://www.instagram.com/ecotrips_women`
-- Emplacements prevus pour ajouter des videos plus tard
+- Emplacements prévus pour ajouter des vidéos plus tard
 
 ## Lancer localement
 
