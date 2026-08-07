@@ -327,6 +327,7 @@ h3 {
 }
 
 .trips {
+  margin-bottom: 62px;
   overflow: hidden;
 }
 
@@ -410,8 +411,8 @@ h3 {
 
 .how-section {
   width: 100%;
-  margin-bottom: 110px;
-  padding: 82px 16px 78px;
+  margin-bottom: 62px;
+  padding: 56px 16px 54px;
   background: linear-gradient(180deg, var(--white) 0%, var(--rose-mist) 42%, var(--white) 100%);
 }
 
@@ -616,8 +617,8 @@ h3 {
 
 .reviews {
   width: 100%;
-  margin-bottom: 110px;
-  padding: 78px 0 72px;
+  margin-bottom: 62px;
+  padding: 56px 0 54px;
   overflow: hidden;
   background: linear-gradient(180deg, var(--white) 0%, var(--rose-mist) 45%, var(--white) 100%);
 }
@@ -1295,8 +1296,15 @@ h3 {
     margin-bottom: 78px;
   }
 
+  /* Ecarts resserres autour des bandes "Comment ca marche" et "Avis". */
+  .trips,
+  .how-section,
   .reviews {
-    padding: 58px 0 54px;
+    margin-bottom: 42px;
+  }
+
+  .reviews {
+    padding: 44px 0 42px;
   }
 
   .reviews-marquee {
@@ -1322,7 +1330,7 @@ h3 {
   }
 
   .how-section {
-    padding: 60px 16px 58px;
+    padding: 44px 16px 42px;
   }
 
   .steps article {
