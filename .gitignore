@@ -3,6 +3,7 @@ node_modules
 out
 *.log
 .env*
+!.env.local.example
 .pnpm-store
 .vercel
 
