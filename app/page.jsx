@@ -138,7 +138,7 @@ function ReviewCard({ review }) {
 
 const trips = [
   {
-    image: "/assets/offre-nador-el-houceima.png",
+    image: "/assets/offre-nador-el-houceima.jpg",
     alt: "Offre Nador El Houceima",
     badge: "Vente flash",
     badgeClass: "",
@@ -149,7 +149,7 @@ const trips = [
     message: "Bonjour EcoTrips Women, je veux réserver Nador El Houceima",
   },
   {
-    image: "/assets/offre-camping-boujimil.png",
+    image: "/assets/offre-camping-boujimil.jpg",
     alt: "Offre Camping Boujimil",
     badge: "Camping",
     badgeClass: "yellow",
@@ -160,7 +160,7 @@ const trips = [
     message: "Bonjour EcoTrips Women, je veux réserver Camping Boujimil",
   },
   {
-    image: "/assets/offre-belyounech-boujimil-fnideq.png",
+    image: "/assets/offre-belyounech-boujimil-fnideq.jpg",
     alt: "Offre Belyounech Boujimil Fnideq",
     badge: "Promotion",
     badgeClass: "blue",
@@ -204,6 +204,10 @@ const featuredVideos = [
   "/assets/galerie/video-souvenir-voyage.mp4",
 ];
 
+function posterFor(src) {
+  return src.replace(/\.mp4$/, "-poster.jpg");
+}
+
 // Se precharge et se lance sans son des qu'elle approche de l'ecran, se met en pause en sortant.
 function ScrollVideo({ item, tall, onOpen }) {
   const ref = useRef(null);
@@ -238,7 +242,19 @@ function ScrollVideo({ item, tall, onOpen }) {
       aria-label={`Agrandir: ${item.alt}`}
       onClick={onOpen}
     >
-      <video ref={ref} src={item.src} muted loop playsInline preload="metadata" tabIndex={-1} />
+      {/* poster + autoPlay: sur iOS la lecture auto peut etre bloquee (mode economie
+          d'energie), l'image de couverture garantit qu'on voit toujours quelque chose. */}
+      <video
+        ref={ref}
+        src={item.src}
+        poster={posterFor(item.src)}
+        muted
+        loop
+        autoPlay
+        playsInline
+        preload="none"
+        tabIndex={-1}
+      />
       <span className="video-slot-play" aria-hidden="true" />
     </button>
   );
@@ -252,9 +268,6 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState(null);
   const touchStart = useRef(null);
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${encodeURIComponent(
-    instagramUrl
-  )}`;
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
@@ -529,20 +542,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="community-band">
-          <div>
-            <p className="eyebrow">Communauté</p>
-            <h2>
-              Rejoins-nous <span>sur Instagram</span>
-            </h2>
-            <p>Scanne le QR code ou clique dessus pour ouvrir la page Instagram EcoTrips Women.</p>
-          </div>
-          <a className="qr-card" href={instagramUrl} aria-label="Ouvrir Instagram EcoTrips Women">
-            <Image src={qrUrl} alt="QR code vers Instagram EcoTrips Women" width={260} height={260} unoptimized />
-            <span>@ecotrips_women</span>
-          </a>
-        </section>
-
         {/* Section "Voyages signature" masquee pour l'instant - decommenter pour la reactiver.
         <section className="section signature">
           <div className="section-title">
@@ -584,7 +583,7 @@ export default function HomePage() {
               >
                 {item.type === "video" ? (
                   <>
-                    <video src={`${item.src}#t=0.1`} muted playsInline preload="metadata" />
+                    <video src={item.src} poster={posterFor(item.src)} muted playsInline preload="none" />
                     <span className="gallery-play" aria-hidden="true" />
                   </>
                 ) : (
@@ -598,6 +597,25 @@ export default function HomePage() {
               </button>
             ))}
           </div>
+        </section>
+
+        <section className="community-band">
+          <div>
+            <p className="eyebrow">Communauté</p>
+            <h2>
+              Rejoins-nous <span>sur Instagram</span>
+            </h2>
+            <p>Scanne le QR code ou clique dessus pour ouvrir la page Instagram EcoTrips Women.</p>
+          </div>
+          <a className="qr-card" href={instagramUrl} aria-label="Ouvrir Instagram EcoTrips Women">
+            <Image
+              src="/assets/qr-instagram.png"
+              alt="QR code vers Instagram EcoTrips Women"
+              width={260}
+              height={260}
+            />
+            <span>@ecotrips_women</span>
+          </a>
         </section>
 
         <section className="newsletter" id="contact">
@@ -617,7 +635,7 @@ export default function HomePage() {
             </div>
           </div>
           <Image
-            src="/assets/offre-belyounech-boujimil-fnideq.png"
+            src="/assets/offre-belyounech-boujimil-fnideq.jpg"
             alt="Voyage EcoTrips Women"
             width={1080}
             height={1350}
