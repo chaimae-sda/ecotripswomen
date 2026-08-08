@@ -1,7 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { bookingMessage, whatsappLink } from "../lib/whatsapp";
+import Lightbox from "./lightbox";
+import SiteFooter from "./site-footer";
+import SiteHeader from "./site-header";
+import TripCarousel from "./trip-carousel";
 
 function GoogleMark() {
   return (
@@ -132,118 +139,24 @@ function instagramHandle(url) {
 export default function Home({ content }) {
   const { settings, offers, reviews, gallery } = content;
 
-  const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState(null);
-  const touchStart = useRef(null);
 
   const handle = instagramHandle(settings.instagramUrl);
   const featuredVideos = gallery.filter((item) => item.type === "video" && item.featured).slice(0, 3);
   const emptySlots = Math.max(0, 3 - featuredVideos.length);
 
-  function whatsappLink(message) {
-    const number = (settings.phone || "").replace(/[^\d]/g, "");
-    return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-  }
-
-  const bookingMessage = "Bonjour EcoTrips Women, je veux réserver une place";
-
-  const closeLightbox = useCallback(() => setLightbox(null), []);
-
-  const step = useCallback(
-    (direction) => {
-      setLightbox((current) => {
-        if (current === null) return current;
-        return (current + direction + gallery.length) % gallery.length;
-      });
-    },
-    [gallery.length]
-  );
-
-  useEffect(() => {
-    if (lightbox === null) return undefined;
-
-    function onKeyDown(event) {
-      if (event.key === "Escape") closeLightbox();
-      if (event.key === "ArrowRight") step(1);
-      if (event.key === "ArrowLeft") step(-1);
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [lightbox, closeLightbox, step]);
-
-  function onTouchStart(event) {
-    touchStart.current = event.changedTouches[0].clientX;
-  }
-
-  function onTouchEnd(event) {
-    if (touchStart.current === null) return;
-    const delta = event.changedTouches[0].clientX - touchStart.current;
-    touchStart.current = null;
-    if (Math.abs(delta) > 50) step(delta < 0 ? 1 : -1);
-  }
-
   function handleSubmit(event) {
     event.preventDefault();
     const email = new FormData(event.currentTarget).get("email") || "";
     window.location.href = whatsappLink(
+      settings.phone,
       `Bonjour EcoTrips Women, je veux recevoir les prochaines sorties. E-mail: ${email}`
     );
   }
 
-  function closeMenu() {
-    setMenuOpen(false);
-  }
-
   return (
     <>
-      <header className={`site-header ${menuOpen ? "is-open" : ""}`} id="top">
-        <a className="brand" href="#top" aria-label="EcoTrips Women" onClick={closeMenu}>
-          <Image
-            src={settings.logo.url}
-            alt="EcoTrips Women"
-            width={settings.logo.width}
-            height={settings.logo.height}
-            priority
-          />
-        </a>
-        <nav className="main-nav" aria-label="Navigation principale">
-          <a href="#offres" onClick={closeMenu}>
-            Offres
-          </a>
-          <a href="#fonctionnement" onClick={closeMenu}>
-            Fonctionnement
-          </a>
-          <a href="#videos" onClick={closeMenu}>
-            Vidéos
-          </a>
-          <a href="#avis" onClick={closeMenu}>
-            Avis
-          </a>
-          <a href="#contact" onClick={closeMenu}>
-            Contact
-          </a>
-        </nav>
-        <a className="header-cta" href={whatsappLink(bookingMessage)}>
-          Réserver
-        </a>
-        <button
-          className="menu-toggle"
-          type="button"
-          aria-label="Ouvrir le menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          <span />
-          <span />
-        </button>
-      </header>
+      <SiteHeader settings={settings} />
 
       <main>
         <section className="hero" aria-labelledby="hero-title">
@@ -272,7 +185,7 @@ export default function Home({ content }) {
               <a className="primary-btn" href="#offres">
                 {settings.hero.primaryLabel}
               </a>
-              <a className="ghost-btn" href={whatsappLink(bookingMessage)}>
+              <a className="ghost-btn" href={whatsappLink(settings.phone, bookingMessage())}>
                 {settings.hero.secondaryLabel}
               </a>
             </div>
@@ -290,35 +203,11 @@ export default function Home({ content }) {
 
         <section className="section trips" id="offres">
           <SectionTitle heading={settings.offersTitle} />
-          <div className="trip-grid">
-            {offers.map((offer) => (
-              <article className="trip-card" key={offer.title}>
-                <Image
-                  src={offer.image.url}
-                  alt={`Offre ${offer.title}`}
-                  width={offer.image.width}
-                  height={offer.image.height}
-                  sizes="(max-width: 1080px) 100vw, 33vw"
-                />
-                <div className="trip-content">
-                  {offer.badge ? <span className={`badge ${offer.badgeColor}`}>{offer.badge}</span> : null}
-                  <h3>{offer.title}</h3>
-                  <p>
-                    {offer.date}
-                    {offer.date && offer.departure ? " · " : ""}
-                    {offer.departure}
-                  </p>
-                  <strong>{offer.price}</strong>
-                  <a
-                    href={whatsappLink(
-                      offer.message || `Bonjour EcoTrips Women, je veux réserver ${offer.title}`
-                    )}
-                  >
-                    Réserver
-                  </a>
-                </div>
-              </article>
-            ))}
+          <TripCarousel offers={offers} phone={settings.phone} labels={settings.labels} />
+          <div className="trips-more">
+            <Link className="primary-btn" href="/offres">
+              {settings.labels.allOffers}
+            </Link>
           </div>
         </section>
 
@@ -475,82 +364,10 @@ export default function Home({ content }) {
       </main>
 
       {lightbox !== null && (
-        <div
-          className="lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Galerie EcoTrips Women"
-          onClick={closeLightbox}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          <button className="lightbox-close" type="button" aria-label="Fermer" onClick={closeLightbox}>
-            <span aria-hidden="true">×</span>
-          </button>
-
-          <button
-            className="lightbox-nav prev"
-            type="button"
-            aria-label="Média précédent"
-            onClick={(event) => {
-              event.stopPropagation();
-              step(-1);
-            }}
-          >
-            <span aria-hidden="true">‹</span>
-          </button>
-
-          <figure className="lightbox-stage" onClick={(event) => event.stopPropagation()}>
-            {gallery[lightbox].type === "video" ? (
-              <video src={gallery[lightbox].src} controls autoPlay playsInline />
-            ) : (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={gallery[lightbox].src} alt={gallery[lightbox].alt} />
-            )}
-            <figcaption>
-              <span>{gallery[lightbox].alt}</span>
-              <small>
-                {lightbox + 1} / {gallery.length}
-              </small>
-            </figcaption>
-          </figure>
-
-          <button
-            className="lightbox-nav next"
-            type="button"
-            aria-label="Média suivant"
-            onClick={(event) => {
-              event.stopPropagation();
-              step(1);
-            }}
-          >
-            <span aria-hidden="true">›</span>
-          </button>
-        </div>
+        <Lightbox items={gallery} index={lightbox} onChange={setLightbox} />
       )}
 
-      <footer className="site-footer">
-        <div className="footer-claim">
-          <p>
-            {settings.footerLine1}{" "}
-            {settings.footerHighlight ? <span>{settings.footerHighlight}</span> : null}
-          </p>
-          <p>{settings.footerLine2}</p>
-        </div>
-        <Image
-          src={settings.logo.url}
-          alt="EcoTrips Women"
-          width={settings.logo.width}
-          height={settings.logo.height}
-        />
-        <nav aria-label="Pied de page">
-          <a href="#offres">Offres</a>
-          <a href="#fonctionnement">Fonctionnement</a>
-          <a href="#videos">Vidéos</a>
-          <a href="#avis">Avis</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </footer>
+      <SiteFooter settings={settings} />
     </>
   );
 }

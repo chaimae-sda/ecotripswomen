@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sanity:import": "node scripts/import-to-sanity.mjs"
+    "sanity:import": "node scripts/import-to-sanity.mjs",
+    "sanity:add-offers": "node scripts/add-offers.mjs",
+    "sanity:fill": "node scripts/fill-offer-details.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.26.2",

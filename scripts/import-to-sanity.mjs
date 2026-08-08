@@ -110,6 +110,19 @@ async function run() {
   console.log("2/4  Voyages a venir");
   const offerItems = [];
   for (const [index, offer] of offers.entries()) {
+    const previousGallery = [];
+    for (const [photoIndex, photo] of (offer.previousGallery || []).entries()) {
+      const image = await upload("image", photo.src);
+      if (image) {
+        previousGallery.push({
+          _key: `offer-${index}-photo-${photoIndex}`,
+          _type: "photo",
+          image,
+          alt: photo.alt,
+        });
+      }
+    }
+
     offerItems.push({
       _key: `offer-${index}`,
       _type: "offer",
@@ -121,6 +134,17 @@ async function run() {
       departure: offer.departure,
       price: offer.price,
       message: offer.message,
+      summary: offer.summary || "",
+      program: (offer.program || []).map((day, dayIndex) => ({
+        _key: `offer-${index}-day-${dayIndex}`,
+        _type: "day",
+        ...day,
+      })),
+      included: offer.included || [],
+      toBring: offer.toBring || [],
+      departureDates: offer.departureDates || [],
+      departureCities: offer.departureCities || [],
+      previousGallery,
     });
   }
 

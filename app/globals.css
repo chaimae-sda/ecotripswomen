@@ -1163,6 +1163,847 @@ h3 {
   font-weight: 900;
 }
 
+/* ---------------------------------------------------------------------------
+   Carrousel des voyages a venir: defilement au doigt, triangles sur ordinateur.
+   --------------------------------------------------------------------------- */
+
+.trip-carousel {
+  position: relative;
+}
+
+.trip-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 44px) / 3);
+  gap: 22px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0;
+  /* Place pour l'ombre des cartes, sinon elle est rognee au defilement. */
+  padding: 6px 4px 18px;
+  margin: -6px -4px -18px;
+  scrollbar-width: none;
+}
+
+.trip-track::-webkit-scrollbar {
+  display: none;
+}
+
+.trip-track .trip-card {
+  scroll-snap-align: start;
+}
+
+.trip-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 30px rgba(37, 34, 41, 0.16);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.trip-arrow:hover:not(:disabled) {
+  background: var(--pink-soft);
+}
+
+.trip-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Les fleches restent a l'interieur du cadre: la section "trips" masque ce qui
+   depasse, et un debordement lateral ferait apparaitre une barre de defilement
+   sur toute la page. */
+.trip-arrow.prev {
+  left: 8px;
+}
+
+.trip-arrow.next {
+  right: 8px;
+}
+
+/* Les petits triangles, dessines en CSS pour rester nets a tout agrandissement. */
+.trip-arrow span {
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+
+.trip-arrow.prev span {
+  border-right: 12px solid var(--pink);
+  margin-right: 3px;
+}
+
+.trip-arrow.next span {
+  border-left: 12px solid var(--pink);
+  margin-left: 3px;
+}
+
+.trips-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+.trips-more .primary-btn {
+  min-height: 54px;
+  padding: 0 40px;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+   Page "Toutes les offres" et ses filtres.
+   --------------------------------------------------------------------------- */
+
+.all-offers {
+  margin-top: 10px;
+}
+
+.all-offers h1 {
+  max-width: none;
+  font-size: clamp(42px, 6vw, 76px);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--rose-mist);
+}
+
+.filter-field {
+  display: grid;
+  flex: 1 1 190px;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.filter-field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-field select:focus {
+  outline: 2px solid var(--pink);
+  outline-offset: 1px;
+}
+
+.filter-reset {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pink);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.filter-reset:hover {
+  background: var(--pink);
+  color: var(--white);
+}
+
+.filter-count {
+  margin: 0 0 26px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.filter-empty {
+  padding: 60px 24px;
+  border: 1px dashed var(--line);
+  border-radius: 24px;
+  color: var(--muted);
+  font-size: 17px;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Carte d'offre: les deux boutons "Reserver" et "Plus d'infos" cote a cote.
+   --------------------------------------------------------------------------- */
+
+.trip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Le bouton Reserver de la carte ouvre le formulaire: c'est un vrai bouton,
+   mais il garde l'apparence rose du lien qu'il remplace. */
+.trip-book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 118px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pink);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.trip-book:hover {
+  background: #cf1a6d;
+}
+
+.trip-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 118px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--white);
+  font-weight: 900;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease;
+}
+
+.trip-more:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ---------------------------------------------------------------------------
+   Page d'un voyage: l'affiche a gauche, le detail a droite.
+   --------------------------------------------------------------------------- */
+
+.offer-page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto 96px;
+}
+
+.offer-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-bottom: 26px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font-size: 14px;
+  font-weight: 900;
+  transition: background 0.2s ease;
+}
+
+.offer-back:hover {
+  background: #ffd8ec;
+}
+
+/* L'affiche et son bouton en haut a gauche, les souvenirs juste en dessous, le
+   detail sur toute la hauteur a droite. */
+.offer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  grid-template-areas:
+    "aside main"
+    "memories main";
+  align-items: start;
+  column-gap: 52px;
+  row-gap: 26px;
+}
+
+.offer-aside {
+  grid-area: aside;
+  display: grid;
+  gap: 18px;
+}
+
+.offer-main {
+  grid-area: main;
+}
+
+.offer-poster {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--pink-soft);
+  box-shadow: var(--shadow);
+}
+
+.offer-poster img {
+  width: 100%;
+  height: auto;
+}
+
+.offer-poster figcaption {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  margin: 0;
+  color: var(--white);
+}
+
+/* Le grand bouton de reservation, directement sous l'affiche. */
+.offer-book {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 68px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--pink);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 16px 34px rgba(229, 31, 121, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.offer-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(229, 31, 121, 0.4);
+}
+
+.offer-book small {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 15px;
+}
+
+.offer-memories {
+  grid-area: memories;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--rose-mist);
+}
+
+.offer-memories h2 {
+  font-size: 24px;
+}
+
+.offer-memories p {
+  margin: 8px 0 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.offer-memories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.offer-memory {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: var(--pink-soft);
+  cursor: pointer;
+}
+
+.offer-memory img {
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.offer-memory:hover img {
+  transform: scale(1.07);
+}
+
+.offer-main h1 {
+  max-width: none;
+  font-size: clamp(38px, 4.4vw, 60px);
+}
+
+.offer-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 34px;
+  margin: 26px 0 0;
+  padding: 20px 24px;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 12px 30px rgba(37, 34, 41, 0.06);
+}
+
+.offer-facts li {
+  display: grid;
+  gap: 4px;
+}
+
+.offer-facts span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.offer-facts strong {
+  font-size: 17px;
+}
+
+.offer-facts .offer-price {
+  color: var(--pink);
+  font-size: 22px;
+}
+
+.offer-summary {
+  margin: 24px 0 0;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.offer-block {
+  margin-top: 40px;
+}
+
+.offer-block h2 {
+  margin-bottom: 18px;
+  font-size: 30px;
+}
+
+.offer-program {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: offer-day;
+}
+
+.offer-program li {
+  position: relative;
+  padding: 18px 22px 18px 62px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+  counter-increment: offer-day;
+}
+
+.offer-program li::before {
+  content: counter(offer-day);
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.offer-program h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.offer-program p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.offer-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.offer-list li {
+  position: relative;
+  padding-left: 30px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.offer-list li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: var(--pink);
+  font-weight: 900;
+}
+
+.offer-list.included li::before {
+  content: "✓";
+  left: 4px;
+  color: #2e9e6b;
+}
+
+.offer-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 40px;
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: var(--rose-mist);
+}
+
+.offer-cta p {
+  margin: 0;
+  font-weight: 900;
+}
+
+.offer-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  color: var(--pink);
+  font-weight: 900;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.offer-whatsapp:hover {
+  background: var(--pink);
+  color: var(--white);
+}
+
+/* ---------------------------------------------------------------------------
+   Fenetre de reservation.
+   --------------------------------------------------------------------------- */
+
+.booking-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(37, 34, 41, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: lightbox-in 0.22s ease;
+}
+
+.booking-modal {
+  position: relative;
+  width: min(560px, 100%);
+  margin: auto;
+  padding: 40px 40px 34px;
+  border-radius: 30px;
+  /* Rose bebe: fond tres clair, champs blancs par-dessus. */
+  background: linear-gradient(180deg, #ffe3ef 0%, #ffd6e8 100%);
+  box-shadow: 0 30px 80px rgba(37, 34, 41, 0.3);
+}
+
+.booking-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.booking-close:hover {
+  background: var(--white);
+}
+
+.booking-eyebrow {
+  margin: 0 0 8px;
+  color: var(--pink);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.booking-modal h2 {
+  font-size: clamp(28px, 5vw, 38px);
+}
+
+.booking-intro {
+  margin: 14px 0 26px;
+  color: #7a5265;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.booking-form {
+  display: grid;
+  gap: 16px;
+}
+
+.booking-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.booking-form label {
+  display: grid;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.booking-form input,
+.booking-form select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid rgba(229, 31, 121, 0.22);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.booking-form input:focus,
+.booking-form select:focus {
+  outline: 2px solid var(--pink);
+  outline-offset: 1px;
+}
+
+.booking-form input:invalid:not(:placeholder-shown) {
+  border-color: #d63a3a;
+}
+
+.booking-submit {
+  min-height: 56px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pink);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.booking-submit:hover {
+  transform: translateY(-1px);
+  background: #cf1a6d;
+}
+
+.booking-note {
+  margin: 0;
+  color: #7a5265;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Ecran affiche une fois le formulaire envoye. */
+.booking-done {
+  text-align: center;
+}
+
+.booking-check {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--white);
+  color: #2e9e6b;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.booking-done .booking-intro {
+  margin-bottom: 30px;
+}
+
+.booking-question {
+  margin: 0 0 14px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 26px;
+}
+
+.booking-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #08351a;
+  font-size: 16px;
+  font-weight: 900;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.booking-whatsapp:hover {
+  transform: translateY(-1px);
+  background: #1fbb59;
+}
+
+.booking-later {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
+  border: 0;
+  background: transparent;
+  color: #7a5265;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.booking-later:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 1080px) {
+  /* Deux cartes visibles, la troisieme depasse pour montrer qu'on peut glisser. */
+  .trip-track {
+    grid-auto-columns: calc((100% - 22px) / 2);
+  }
+
+  /* Sur la page "Toutes les offres", la grille reste a deux colonnes. */
+  .all-offers .trip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .trip-track {
+    grid-auto-columns: 86%;
+  }
+
+  /* Les triangles laissent la place au geste: on fait glisser au doigt. */
+  .trip-arrow {
+    display: none;
+  }
+
+  .all-offers .trip-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    padding: 18px;
+  }
+
+  .filter-field {
+    flex: 1 1 100%;
+  }
+
+  .filter-reset {
+    width: 100%;
+  }
+}
+
+@media (max-width: 980px) {
+  /* Une seule colonne: l'affiche et son bouton, le detail, puis les souvenirs. */
+  .offer-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "aside"
+      "main"
+      "memories";
+    row-gap: 34px;
+  }
+
+  .offer-memories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .offer-page {
+    margin-bottom: 70px;
+  }
+
+  .offer-facts {
+    gap: 14px 24px;
+    padding: 18px;
+  }
+
+  .offer-memories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .offer-cta {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .booking-modal {
+    padding: 34px 22px 26px;
+    border-radius: 24px;
+  }
+
+  .booking-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1080px) {
   .promise-strip,
   .steps,

@@ -90,6 +90,102 @@ const statsField = {
   ],
 };
 
+// Tous les petits textes des pages voyage: boutons, titres de blocs et
+// formulaire de reservation. Chaque champ vide reprend le texte d'origine.
+const labelsField = {
+  name: "labels",
+  title: "Textes des boutons et des pages voyage",
+  type: "object",
+  options: { collapsible: true, collapsed: false },
+  fields: [
+    {
+      name: "moreInfo",
+      title: "Bouton sur la carte d'offre",
+      type: "string",
+      initialValue: "Plus d'infos",
+    },
+    {
+      name: "allOffers",
+      title: "Bouton sous les offres",
+      type: "string",
+      initialValue: "Voir toutes les offres",
+    },
+    {
+      name: "back",
+      title: "Lien de retour, en haut d'une page voyage",
+      type: "string",
+      initialValue: "Tous les voyages",
+    },
+    {
+      name: "book",
+      title: "Grand bouton de réservation",
+      type: "string",
+      initialValue: "Réserver ce voyage",
+    },
+    { name: "program", title: "Titre du bloc programme", type: "string", initialValue: "Le programme" },
+    {
+      name: "included",
+      title: "Titre du bloc « compris »",
+      type: "string",
+      initialValue: "Ce qui est compris",
+    },
+    { name: "toBring", title: "Titre du bloc « à prévoir »", type: "string", initialValue: "À prévoir" },
+    {
+      name: "memories",
+      title: "Titre de la galerie de l'édition précédente",
+      type: "string",
+      initialValue: "Le même voyage, la fois précédente",
+    },
+    {
+      name: "memoriesText",
+      title: "Phrase sous cette galerie",
+      type: "text",
+      rows: 2,
+      initialValue: "Les photos rapportées par le groupe lors de la dernière édition.",
+    },
+    {
+      name: "question",
+      title: "Phrase du bloc « une question ? »",
+      type: "string",
+      initialValue: "Une question avant de réserver ?",
+    },
+    {
+      name: "questionButton",
+      title: "Bouton du bloc « une question ? »",
+      type: "string",
+      initialValue: "Écrire sur WhatsApp",
+    },
+    {
+      name: "formIntro",
+      title: "Phrase d'introduction du formulaire de réservation",
+      type: "text",
+      rows: 3,
+      initialValue:
+        "Remplis ces quelques informations : elles partent directement à l'équipe, qui te recontacte pour confirmer ta place.",
+    },
+    {
+      name: "formSubmit",
+      title: "Bouton d'envoi du formulaire",
+      type: "string",
+      initialValue: "Envoyer ma réservation",
+    },
+    {
+      name: "formNote",
+      title: "Petite phrase sous le bouton d'envoi",
+      type: "text",
+      rows: 2,
+      initialValue:
+        "Tes informations ne servent qu'à traiter ta réservation. Tu pourras nous écrire sur WhatsApp juste après si tu as une question.",
+    },
+    {
+      name: "noResult",
+      title: "Message quand aucun voyage ne correspond aux filtres",
+      type: "string",
+      initialValue: "Aucun voyage ne correspond à ta recherche.",
+    },
+  ],
+};
+
 export default {
   name: "siteSettings",
   title: "Réglages du site",
@@ -99,6 +195,7 @@ export default {
     { name: "accueil", title: "Accueil" },
     { name: "fonctionnement", title: "Comment ça marche" },
     { name: "titres", title: "Titres des sections" },
+    { name: "voyages", title: "Pages voyage" },
   ],
   fields: [
     {
@@ -157,6 +254,13 @@ export default {
       type: "sectionHeading",
       group: "titres",
     },
+    {
+      name: "allOffersTitle",
+      title: "Titre de la page « Toutes les offres »",
+      type: "sectionHeading",
+      group: "voyages",
+    },
+    { ...labelsField, group: "voyages" },
     {
       name: "reviewsTitle",
       title: "Titre de la section Avis",

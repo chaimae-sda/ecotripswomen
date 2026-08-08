@@ -7,7 +7,10 @@ export const client = sanityEnabled
       projectId,
       dataset,
       apiVersion,
-      useCdn: true,
+      // Sans CDN: au moment du build, la liste des voyages doit etre exacte,
+      // sinon une offre tout juste publiee n'obtient pas sa page de detail. Le
+      // site ne relit de toute facon Sanity qu'une fois par minute (revalidate).
+      useCdn: false,
       perspective: "published",
     })
   : null;

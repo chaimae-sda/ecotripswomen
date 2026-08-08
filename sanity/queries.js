@@ -26,6 +26,8 @@ export const siteContentQuery = `{
     steps[]{ title, text },
     stats[]{ value, label },
     offersTitle${headingFields},
+    allOffersTitle${headingFields},
+    labels,
     videosTitle${headingFields},
     reviewsTitle${headingFields},
     galleryTitle${headingFields},
@@ -44,7 +46,18 @@ export const siteContentQuery = `{
     date,
     departure,
     price,
-    message
+    startDate,
+    endDate,
+    durationDays,
+    destinations,
+    message,
+    summary,
+    program[]{ title, text },
+    included,
+    toBring,
+    departureDates,
+    departureCities,
+    previousGallery[]{ alt, "image": image${imageFields} }
   },
   "reviews": *[_type == "reviews"][0].items[]{
     name,
