@@ -14,17 +14,22 @@ export default function TripCard({ offer, phone, labels }) {
 
   return (
     <article className="trip-card">
-      {offer.image?.url ? (
-        <Image
-          src={offer.image.url}
-          alt={`Offre ${offer.title}`}
-          width={offer.image.width}
-          height={offer.image.height}
-          sizes="(max-width: 760px) 86vw, (max-width: 1080px) 44vw, 33vw"
-        />
-      ) : null}
-      <div className="trip-content">
+      {/* L'affiche occupe toute la largeur, sans rien par-dessus: les infos
+          passent dans le bandeau blanc en dessous. */}
+      <div className="trip-photo">
+        {offer.image?.url ? (
+          <Image
+            src={offer.image.url}
+            alt={`Offre ${offer.title}`}
+            width={offer.image.width}
+            height={offer.image.height}
+            sizes="(max-width: 760px) 86vw, (max-width: 1080px) 44vw, 33vw"
+          />
+        ) : null}
         {offer.badge ? <span className={`badge ${offer.badgeColor}`}>{offer.badge}</span> : null}
+      </div>
+
+      <div className="trip-content">
         <h3>{offer.title}</h3>
         <p>
           {offer.date}

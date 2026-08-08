@@ -90,7 +90,6 @@ a {
 
 .header-cta,
 .primary-btn,
-.trip-content a,
 .contact-form button {
   display: inline-flex;
   align-items: center;
@@ -340,52 +339,54 @@ h3 {
 /* Les affiches sont toutes au format 4:5. En donnant cette proportion a la
    carte, l'image entre pile dedans: plus rien n'est rogne sur les cotes, les
    titres restent lisibles jusqu'a la derniere lettre. */
+/* L'affiche n'est plus recouverte: la carte empile la photo, puis un bandeau
+   blanc qui porte le titre, le prix et les deux boutons. */
 .trip-card {
-  position: relative;
-  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+  border: 1px solid var(--line);
   border-radius: 28px;
-  background: var(--pink-soft);
-  box-shadow: var(--shadow);
+  background: var(--white);
+  /* Pas d'ombre: l'ombre generale du site (flou de 60px) debordait dans les
+     22px qui separent deux cartes, ou les ombres des deux voisines se
+     cumulaient et grisaient le fond (rgb 236 au lieu de 255). La bordure fine
+     suffit a detacher la carte, et la gouttiere reste blanc pur. */
+  box-shadow: none;
 }
 
-.trip-card img {
+.trip-photo {
+  position: relative;
+  /* Meme proportion que les affiches: rien n'est rogne sur les cotes. */
+  aspect-ratio: 4 / 5;
+  background: var(--pink-soft);
+}
+
+.trip-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* La carte epouse desormais la proportion de l'affiche, elle est donc plus
-   courte: le voile doit remonter plus haut et plus dense pour que le texte
-   blanc reste lisible par-dessus les photos claires. */
-.trip-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    0deg,
-    rgba(18, 18, 22, 0.94) 0%,
-    rgba(18, 18, 22, 0.82) 32%,
-    rgba(18, 18, 22, 0.42) 58%,
-    rgba(18, 18, 22, 0.06) 82%,
-    rgba(18, 18, 22, 0) 100%
-  );
-}
-
 .trip-content {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 2;
-  padding: 22px;
-  color: var(--white);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px 20px;
+  color: var(--ink);
 }
 
 .badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
   display: inline-flex;
-  margin-bottom: 12px;
   padding: 8px 12px;
   border-radius: 999px;
   background: var(--pink);
+  color: var(--white);
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
@@ -401,24 +402,31 @@ h3 {
 }
 
 .trip-content h3 {
-  font-size: 27px;
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.15;
 }
 
 .trip-content p {
-  color: rgba(255, 255, 255, 0.82);
-  line-height: 1.5;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .trip-content strong {
   display: block;
   margin-bottom: 14px;
-  color: #ffdcea;
-  font-size: 28px;
+  color: var(--pink);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 27px;
+  line-height: 1.1;
 }
 
-.trip-content a {
-  min-width: 118px;
-  padding: 0 18px;
+/* Les boutons restent colles en bas: les cartes d'une meme rangee gardent
+   leurs actions alignees, meme si un titre tient sur deux lignes. */
+.trip-actions {
+  margin-top: auto;
 }
 
 .how-section {
@@ -1187,9 +1195,6 @@ h3 {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 44px) / 3);
-  /* Sans cela les cartes s'etireraient a la hauteur de la piste et perdraient
-     leur proportion 4:5. */
-  align-items: start;
   gap: 22px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -1396,6 +1401,7 @@ h3 {
   background: #cf1a6d;
 }
 
+/* Sur le bandeau blanc, le second bouton est un contour rose. */
 .trip-more {
   display: inline-flex;
   align-items: center;
@@ -1403,18 +1409,18 @@ h3 {
   min-height: 44px;
   min-width: 118px;
   padding: 0 18px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--pink);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
-  color: var(--white);
+  background: transparent;
+  color: var(--pink);
+  font-size: 15px;
   font-weight: 900;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .trip-more:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--pink);
+  color: var(--white);
 }
 
 /* ---------------------------------------------------------------------------
@@ -1450,12 +1456,18 @@ h3 {
 .offer-layout {
   display: grid;
   grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  /* La colonne de droite s'etend sur toute la hauteur. Sans la 3e rangee vide
+     en "1fr", son surplus serait reparti entre les deux premieres et creuserait
+     un grand trou entre le bouton et les photos. Ici tout le surplus tombe dans
+     cette rangee tampon, et les deux blocs de gauche restent colles. */
   grid-template-areas:
     "aside main"
-    "memories main";
+    "memories main"
+    ". main";
+  grid-template-rows: auto auto 1fr;
   align-items: start;
   column-gap: 52px;
-  row-gap: 26px;
+  row-gap: 18px;
 }
 
 .offer-aside {
@@ -1951,14 +1963,13 @@ h3 {
     grid-auto-columns: 86%;
   }
 
-  /* Cartes plus petites sur telephone: on resserre le bloc de texte pour qu'il
-     tienne dans la zone sombre du voile. */
+  /* Cartes plus etroites sur telephone: bandeau resserre. */
   .trip-content {
-    padding: 16px;
+    padding: 16px 16px 18px;
   }
 
   .trip-content h3 {
-    font-size: 21px;
+    font-size: 20px;
   }
 
   .trip-content p {
@@ -1966,8 +1977,8 @@ h3 {
   }
 
   .trip-content strong {
-    margin-bottom: 10px;
-    font-size: 23px;
+    margin-bottom: 12px;
+    font-size: 24px;
   }
 
   .trip-actions {
@@ -2012,6 +2023,8 @@ h3 {
       "aside"
       "main"
       "memories";
+    /* La rangee tampon de l'affichage sur deux colonnes n'a plus lieu d'etre. */
+    grid-template-rows: auto;
     row-gap: 34px;
   }
 
