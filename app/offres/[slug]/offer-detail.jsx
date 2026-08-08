@@ -14,7 +14,7 @@ export default function OfferDetail({ offer, phone, labels }) {
 
   return (
     <main className="offer-page">
-      <Link className="offer-back" href="/#offres">
+      <Link className="offer-back" href="/offres">
         <span aria-hidden="true">←</span> {labels.back}
       </Link>
 
