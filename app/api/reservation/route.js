@@ -41,11 +41,44 @@ export async function POST(request) {
       signal: AbortSignal.timeout(8000),
     });
 
-    if (!response.ok) throw new Error(`Google a repondu ${response.status}`);
+    const text = await response.text();
+
+    if (!response.ok) {
+      return failed(`google-${response.status}`, `Google a repondu ${response.status}`);
+    }
+
+    // Un code 200 ne suffit pas: quand le script n'est pas publie en acces
+    // "Tout le monde", Google renvoie une page de connexion en HTML, avec un
+    // 200. Sans cette verification le site croirait la ligne enregistree.
+    let payload;
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      const cause = /accounts\.google\.com|<form|Sign in|Connexion/i.test(text)
+        ? "google-login"
+        : "google-not-json";
+      return failed(
+        cause,
+        cause === "google-login"
+          ? "Le script Google n'est pas accessible publiquement: redeploie-le avec " +
+              '"Qui a acces = Tout le monde".'
+          : "Le script Google n'a pas renvoye de JSON."
+      );
+    }
+
+    if (payload?.ok !== true) {
+      return failed("google-error", `Le script Google a repondu: ${text.slice(0, 200)}`);
+    }
+
     return Response.json({ saved: true });
   } catch (error) {
-    // Une panne de la feuille ne doit jamais empecher une cliente de reserver.
-    console.error("Enregistrement dans la Google Sheet impossible:", error.message);
-    return Response.json({ saved: false, reason: "upstream" }, { status: 200 });
+    return failed("upstream", error.message);
   }
+}
+
+// Une panne de la feuille ne doit jamais empecher une cliente de reserver: on
+// repond 200 pour que le formulaire bascule sur son ecran WhatsApp de secours.
+function failed(reason, message) {
+  console.error(`Enregistrement dans la Google Sheet impossible (${reason}):`, message);
+  return Response.json({ saved: false, reason }, { status: 200 });
 }
