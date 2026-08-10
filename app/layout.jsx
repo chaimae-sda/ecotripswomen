@@ -1,6 +1,7 @@
 import { Inter, Playfair_Display } from "next/font/google";
 import { siteUrl } from "../lib/site";
 import "./globals.css";
+import RegisterSW from "./register-sw";
 import ScrollToTop from "./scroll-to-top";
 
 // Polices auto-hebergees par Next: pas de requete vers Google Fonts au chargement.
@@ -36,6 +37,16 @@ export const metadata = {
     siteName: "EcoTrips Women",
     locale: "fr_FR",
   },
+  appleWebApp: {
+    capable: true,
+    title: "EcoTrips Women",
+    statusBarStyle: "default",
+  },
+};
+
+// Couleur de la barre du navigateur une fois l'application installee.
+export const viewport = {
+  themeColor: "#e51f79",
 };
 
 export default function RootLayout({ children }) {
@@ -43,6 +54,7 @@ export default function RootLayout({ children }) {
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <ScrollToTop />
+        <RegisterSW />
         {children}
       </body>
     </html>

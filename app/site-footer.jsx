@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import InstallApp from "./install-app";
+
 const LINKS = [
   { href: "#offres", label: "Offres" },
   { href: "#fonctionnement", label: "Fonctionnement" },
@@ -31,6 +33,8 @@ export default function SiteFooter({ settings, base = "" }) {
             {link.label}
           </Link>
         ))}
+        {/* Ne s'affiche que si l'appareil peut installer l'application. */}
+        <InstallApp />
       </nav>
     </footer>
   );

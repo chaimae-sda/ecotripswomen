@@ -1372,6 +1372,50 @@ h3 {
   font-weight: 900;
 }
 
+/* Bouton d'installation de l'application, dans le pied de page. */
+.install-app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.install-btn:hover {
+  background: var(--pink);
+  color: var(--white);
+}
+
+.install-help {
+  max-width: 280px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 /* Liens vers les pages par ville. */
 .city-links {
   margin-top: 64px;
