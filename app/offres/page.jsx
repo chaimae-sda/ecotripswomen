@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { buildCityIndex } from "../../lib/cities";
 import { getSiteContent } from "../../lib/content";
 import SiteFooter from "../site-footer";
 import SiteHeader from "../site-header";
@@ -5,17 +8,22 @@ import OffersBrowser from "./offers-browser";
 
 export const revalidate = 60;
 
+const TITLE = "Voyages organisés 100% femmes au Maroc | EcoTrips Women";
+const DESCRIPTION =
+  "Tous les voyages organisés entre femmes au Maroc : mer, désert, randonnée et camping, " +
+  "au départ de Tanger, Tétouan, Rabat et Salé. Filtre par ville, prix, date, durée et destination.";
+
 export const metadata = {
-  title: "Toutes les offres | EcoTrips Women",
-  description:
-    "Tous les voyages 100% femmes d'EcoTrips Women, filtrables par ville de départ, prix, date, durée et destination.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/offres" },
-  openGraph: { url: "/offres" },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: "/offres" },
 };
 
 export default async function AllOffersPage() {
   const { settings, offers } = await getSiteContent();
   const heading = settings.allOffersTitle;
+  const cities = buildCityIndex(offers);
 
   return (
     <>
@@ -31,6 +39,23 @@ export default async function AllOffersPage() {
         </div>
 
         <OffersBrowser offers={offers} phone={settings.phone} labels={settings.labels} />
+
+        {/* Chemin d'acces vers les pages par ville, pour les visiteuses comme
+            pour Google. */}
+        {cities.length > 0 && (
+          <nav className="city-links" aria-label="Voyages par ville">
+            <h2>Voyages par ville</h2>
+            <ul>
+              {cities.map((city) => (
+                <li key={city.slug}>
+                  <Link href={`/voyages/${city.slug}`}>
+                    Voyage organisé à {city.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </main>
 
       <SiteFooter settings={settings} base="/" />

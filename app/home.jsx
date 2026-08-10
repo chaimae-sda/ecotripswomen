@@ -179,7 +179,14 @@ export default function Home({ content }) {
                 priority
               />
             </span>
-            <h1 id="hero-title">{settings.hero.title}</h1>
+            {/* Le sous-titre est dans le h1: c'est le titre principal de la
+                page, celui que Google lit en premier pour comprendre le metier. */}
+            <h1 id="hero-title">
+              {settings.hero.title}
+              {settings.hero.tagline ? (
+                <span className="hero-tagline">{settings.hero.tagline}</span>
+              ) : null}
+            </h1>
             <p>{settings.hero.text}</p>
             <div className="hero-actions">
               <a className="primary-btn" href="#offres">

@@ -24,10 +24,10 @@ export const metadata = {
   // technique du deploiement (…vercel.app): les apercus Facebook et WhatsApp
   // pointeraient vers le mauvais domaine.
   metadataBase: new URL(siteUrl),
-  title: "EcoTrips Women | Voyages femmes au Maroc",
+  // Valeurs de repli: chaque page definit les siennes, plus precises.
+  title: "Agence de voyage 100% femmes au Maroc | EcoTrips Women",
   description:
-    "EcoTrips Women organise des voyages 100% femmes au Maroc: mer, camping, randonnée, piscine et escapades entre voyageuses.",
-  alternates: { canonical: "/" },
+    "EcoTrips Women organise des voyages 100% femmes au Maroc : mer, camping, randonnée et escapades entre voyageuses.",
   // Preuve de propriete pour Google Search Console. Ce code est public par
   // nature: il doit apparaitre dans le HTML de chaque page.
   verification: { google: "srcYg9HIasjV5yMvRgq4BmO81vfsEjlMiDV5ms06plE" },
@@ -35,7 +35,6 @@ export const metadata = {
     type: "website",
     siteName: "EcoTrips Women",
     locale: "fr_FR",
-    url: "/",
   },
 };
 

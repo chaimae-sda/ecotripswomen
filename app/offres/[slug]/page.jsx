@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getSiteContent } from "../../../lib/content";
 import SiteFooter from "../../site-footer";
 import SiteHeader from "../../site-header";
+import { OfferJsonLd } from "../../structured-data";
 import OfferDetail from "./offer-detail";
 
 export const revalidate = 60;
@@ -26,15 +27,22 @@ export async function generateMetadata({ params }) {
 
   const details = [offer.date, offer.departure, offer.price].filter(Boolean).join(" · ");
 
+  // Le titre porte les mots que les clientes tapent, pas seulement le nom du
+  // voyage: "Nador - El Houceima" seul ne dit rien a Google.
+  const title = `${offer.title} — voyage 100% femmes au Maroc | EcoTrips Women`;
+  const description = offer.summary
+    ? `${offer.summary} Voyage organisé entre femmes${offer.departure ? `, ${offer.departure.replace(/^\s*d[ée]part\s*/i, "départ ")}` : ""}.`
+    : `${offer.title} : voyage organisé 100% femmes au Maroc avec EcoTrips Women. ${details}`;
+
   return {
-    title: `${offer.title} | EcoTrips Women`,
-    description: offer.summary || details,
+    title,
+    description,
     alternates: { canonical: `/offres/${offer.slug}` },
     openGraph: {
       type: "article",
       url: `/offres/${offer.slug}`,
-      title: `${offer.title} | EcoTrips Women`,
-      description: offer.summary || details,
+      title,
+      description,
       images: offer.image?.url ? [offer.image.url] : [],
     },
   };
@@ -47,6 +55,7 @@ export default async function OfferPage({ params }) {
 
   return (
     <>
+      <OfferJsonLd offer={offer} />
       <SiteHeader settings={content.settings} base="/" />
       <OfferDetail offer={offer} phone={content.settings.phone} labels={content.settings.labels} />
       <SiteFooter settings={content.settings} base="/" />

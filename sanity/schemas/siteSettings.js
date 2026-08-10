@@ -19,6 +19,16 @@ const heroFields = {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: "tagline",
+      title: "Sous-titre sous le grand titre",
+      type: "string",
+      description:
+        "Petite ligne juste sous le grand titre. Elle compte beaucoup pour Google : c'est là " +
+        "qu'il comprend le métier. Garde-y les mots que tes clientes tapent, par exemple " +
+        '"Agence de voyage 100% femmes au Maroc". Laisse vide pour ne rien afficher.',
+      initialValue: "Agence de voyage 100% femmes au Maroc",
+    },
+    {
       name: "text",
       title: "Phrase de presentation",
       type: "text",
@@ -186,12 +196,43 @@ const labelsField = {
   ],
 };
 
+// Ce que Google affiche dans ses resultats de recherche.
+const seoField = {
+  name: "seo",
+  title: "Référencement Google",
+  type: "object",
+  options: { collapsible: true, collapsed: false },
+  fields: [
+    {
+      name: "metaTitle",
+      title: "Titre dans les résultats Google",
+      type: "string",
+      description:
+        "La ligne bleue cliquable. Vise 60 caractères maximum, sinon Google la coupe. " +
+        "Mets les mots que tes clientes tapent au début.",
+      validation: (Rule) => Rule.max(65).warning("Au-delà de 65 caractères, Google coupe la fin."),
+    },
+    {
+      name: "metaDescription",
+      title: "Description dans les résultats Google",
+      type: "text",
+      rows: 3,
+      description:
+        "Le petit paragraphe gris sous le titre. Vise 155 caractères maximum. " +
+        "C'est lui qui donne envie de cliquer.",
+      validation: (Rule) =>
+        Rule.max(165).warning("Au-delà de 165 caractères, Google coupe la fin."),
+    },
+  ],
+};
+
 export default {
   name: "siteSettings",
   title: "Réglages du site",
   type: "document",
   groups: [
     { name: "identite", title: "Identité et contact", default: true },
+    { name: "seo", title: "Référencement Google" },
     { name: "accueil", title: "Accueil" },
     { name: "fonctionnement", title: "Comment ça marche" },
     { name: "titres", title: "Titres des sections" },
@@ -232,6 +273,7 @@ export default {
       type: "image",
       group: "identite",
     },
+    { ...seoField, group: "seo" },
     { ...heroFields, group: "accueil" },
     { ...promiseField, group: "accueil" },
     {

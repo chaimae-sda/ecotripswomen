@@ -14,9 +14,11 @@ export const siteContentQuery = `{
     instagramUrl,
     googleReviewsUrl,
     "qrCode": qrCode${imageFields},
+    seo{ metaTitle, metaDescription },
     hero{
       "photo": photo${imageFields},
       title,
+      tagline,
       text,
       primaryLabel,
       secondaryLabel
