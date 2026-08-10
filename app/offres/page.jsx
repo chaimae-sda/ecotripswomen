@@ -9,6 +9,8 @@ export const metadata = {
   title: "Toutes les offres | EcoTrips Women",
   description:
     "Tous les voyages 100% femmes d'EcoTrips Women, filtrables par ville de départ, prix, date, durée et destination.",
+  alternates: { canonical: "/offres" },
+  openGraph: { url: "/offres" },
 };
 
 export default async function AllOffersPage() {

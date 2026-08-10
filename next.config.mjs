@@ -13,6 +13,22 @@ const nextConfig = {
     // remotePatterns limite deja l'optimiseur au seul domaine cdn.sanity.io.
     dangerouslyAllowLocalIP: true,
   },
+
+  // L'ancienne adresse technique de Vercel continue de servir le site en
+  // parallele du vrai domaine, et Vercel ne permet pas de la rediriger depuis
+  // son interface. On le fait ici: Google n'indexe ainsi qu'une seule version.
+  // Le filtre porte sur ce seul nom d'hote, donc les deploiements de test
+  // (ecotripswomen-git-...vercel.app) et le travail en local ne sont pas touches.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "ecotripswomen.vercel.app" }],
+        destination: "https://www.ecotripswomen.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

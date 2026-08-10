@@ -1,4 +1,5 @@
 import { Inter, Playfair_Display } from "next/font/google";
+import { siteUrl } from "../lib/site";
 import "./globals.css";
 import ScrollToTop from "./scroll-to-top";
 
@@ -19,9 +20,23 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
+  // Sans metadataBase, Next fabrique les liens de partage a partir de l'adresse
+  // technique du deploiement (…vercel.app): les apercus Facebook et WhatsApp
+  // pointeraient vers le mauvais domaine.
+  metadataBase: new URL(siteUrl),
   title: "EcoTrips Women | Voyages femmes au Maroc",
   description:
     "EcoTrips Women organise des voyages 100% femmes au Maroc: mer, camping, randonnée, piscine et escapades entre voyageuses.",
+  alternates: { canonical: "/" },
+  // Preuve de propriete pour Google Search Console. Ce code est public par
+  // nature: il doit apparaitre dans le HTML de chaque page.
+  verification: { google: "srcYg9HIasjV5yMvRgq4BmO81vfsEjlMiDV5ms06plE" },
+  openGraph: {
+    type: "website",
+    siteName: "EcoTrips Women",
+    locale: "fr_FR",
+    url: "/",
+  },
 };
 
 export default function RootLayout({ children }) {

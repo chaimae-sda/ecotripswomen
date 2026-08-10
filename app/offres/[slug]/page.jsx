@@ -29,7 +29,10 @@ export async function generateMetadata({ params }) {
   return {
     title: `${offer.title} | EcoTrips Women`,
     description: offer.summary || details,
+    alternates: { canonical: `/offres/${offer.slug}` },
     openGraph: {
+      type: "article",
+      url: `/offres/${offer.slug}`,
       title: `${offer.title} | EcoTrips Women`,
       description: offer.summary || details,
       images: offer.image?.url ? [offer.image.url] : [],
