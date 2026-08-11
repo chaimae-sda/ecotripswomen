@@ -350,9 +350,6 @@ h3 {
   gap: 22px;
 }
 
-/* Les affiches sont toutes au format 4:5. En donnant cette proportion a la
-   carte, l'image entre pile dedans: plus rien n'est rogne sur les cotes, les
-   titres restent lisibles jusqu'a la derniere lettre. */
 /* L'affiche n'est plus recouverte: la carte empile la photo, puis un bandeau
    blanc qui porte le titre, le prix et les deux boutons. */
 .trip-card {
@@ -1983,69 +1980,6 @@ h3 {
   text-align: center;
 }
 
-/* Ecran affiche une fois le formulaire envoye. */
-.booking-done {
-  text-align: center;
-}
-
-.booking-check {
-  display: grid;
-  place-items: center;
-  width: 62px;
-  height: 62px;
-  margin: 0 auto 18px;
-  border-radius: 50%;
-  background: var(--white);
-  color: #2e9e6b;
-  font-size: 30px;
-  font-weight: 900;
-}
-
-.booking-done .booking-intro {
-  margin-bottom: 30px;
-}
-
-.booking-question {
-  margin: 0 0 14px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-size: 26px;
-}
-
-.booking-whatsapp {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-  padding: 0 26px;
-  border-radius: 999px;
-  background: #25d366;
-  color: #08351a;
-  font-size: 16px;
-  font-weight: 900;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.booking-whatsapp:hover {
-  transform: translateY(-1px);
-  background: #1fbb59;
-}
-
-.booking-later {
-  width: 100%;
-  min-height: 44px;
-  margin-top: 12px;
-  border: 0;
-  background: transparent;
-  color: #7a5265;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.booking-later:hover {
-  color: var(--ink);
-}
 
 @media (max-width: 1080px) {
   /* Deux cartes visibles, la troisieme depasse pour montrer qu'on peut glisser. */

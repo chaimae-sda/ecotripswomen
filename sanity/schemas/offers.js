@@ -164,9 +164,10 @@ export default {
               title: "Dates de départ proposées",
               type: "array",
               description:
-                "Les dates que la cliente pourra choisir dans le formulaire de réservation, par exemple " +
-                '"14 - 16 août". Si tu laisses vide, seule la date écrite plus haut est proposée.',
-              of: [{ type: "string" }],
+                "Choisis chaque date de départ dans le calendrier. Ce sont les seules dates que " +
+                "la cliente pourra sélectionner dans le formulaire de réservation. Ajoute une " +
+                "ligne par départ. Si tu laisses vide, la date écrite plus haut est proposée.",
+              of: [{ type: "date", options: { dateFormat: "DD/MM/YYYY" } }],
             },
             {
               name: "departureCities",

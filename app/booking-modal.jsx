@@ -4,24 +4,22 @@ import { useEffect, useRef, useState } from "react";
 
 import { whatsappLink } from "../lib/whatsapp";
 
-function detailsMessage(offer, booking) {
-  return [
-    `Bonjour EcoTrips Women, je veux réserver « ${offer.title} »${
-      offer.price ? ` (${offer.price})` : ""
-    }.`,
-    `Prénom et nom : ${booking.firstName} ${booking.lastName}`,
-    `Ville de départ : ${booking.city}`,
-    `Téléphone : ${booking.phone}`,
-    `Date souhaitée : ${booking.departureDate}`,
-  ].join("\n");
+// Message envoye a l'equipe: une phrase complete, lisible telle quelle dans
+// WhatsApp, qui reprend les reponses du formulaire.
+function bookingMessage(offer, booking) {
+  return (
+    `Bonjour, je suis ${booking.firstName} ${booking.lastName} ` +
+    `et je souhaite réserver pour le voyage ${offer.title} ` +
+    `au départ de ${booking.city} le ${booking.departureDate}.`
+  );
 }
 
-// Formulaire de reservation en fenetre surgissante. Les reponses partent dans
-// la Google Sheet de l'equipe, puis un ecran de confirmation propose WhatsApp.
+// Formulaire de reservation en fenetre surgissante. A l'envoi, les reponses
+// sont enregistrees dans la Google Sheet puis WhatsApp s'ouvre avec le message
+// deja redige.
 export default function BookingModal({ offer, phone, labels, onClose }) {
   const firstField = useRef(null);
   const [sending, setSending] = useState(false);
-  const [done, setDone] = useState(null);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -56,22 +54,20 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
       departureDate: value("departureDate"),
     };
 
-    // Si la feuille est injoignable, l'ecran de confirmation bascule sur un
-    // message WhatsApp complet: une reservation ne doit jamais se perdre.
-    let saved = false;
+    // On enregistre dans la Google Sheet, puis on part vers WhatsApp. Une
+    // feuille injoignable ne doit pas empecher la reservation: le message
+    // WhatsApp contient de toute facon toutes les informations.
     try {
-      const response = await fetch("/api/reservation", {
+      await fetch("/api/reservation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(booking),
       });
-      saved = (await response.json())?.saved === true;
     } catch {
-      saved = false;
+      /* on poursuit vers WhatsApp */
     }
 
-    setSending(false);
-    setDone({ booking, saved });
+    window.location.href = whatsappLink(phone, bookingMessage(offer, booking));
   }
 
   return (
@@ -87,119 +83,76 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
           <span aria-hidden="true">×</span>
         </button>
 
-        {done ? (
-          <div className="booking-done">
-            <span className="booking-check" aria-hidden="true">
-              ✓
-            </span>
-            <p className="booking-eyebrow">
-              {done.saved ? "Réservation envoyée" : "Dernière étape"}
-            </p>
-            <h2 id="booking-title">{offer.title}</h2>
+        <p className="booking-eyebrow">Réservation</p>
+        <h2 id="booking-title">{offer.title}</h2>
+        <p className="booking-intro">{labels.formIntro}</p>
 
-            {done.saved ? (
-              <p className="booking-intro">
-                C&apos;est noté, {done.booking.firstName} ! L&apos;équipe te recontacte pour
-                confirmer ta place.
-              </p>
-            ) : (
-              <p className="booking-intro">
-                Ta demande n&apos;a pas pu être enregistrée. Envoie-la directement sur WhatsApp
-                avec le bouton ci-dessous, elle est déjà écrite.
-              </p>
-            )}
-
-            <p className="booking-question">Une question ?</p>
-            <a
-              className="booking-whatsapp"
-              href={whatsappLink(
-                phone,
-                done.saved
-                  ? `Bonjour, je vous contacte au sujet de ma réservation pour ${offer.title}`
-                  : detailsMessage(offer, done.booking)
-              )}
-            >
-              {done.saved ? "Contactez-nous sur WhatsApp" : "Envoyer ma réservation sur WhatsApp"}
-            </a>
-
-            <button className="booking-later" type="button" onClick={onClose}>
-              Fermer
-            </button>
+        <form className="booking-form" onSubmit={handleSubmit}>
+          <div className="booking-row">
+            <label>
+              <span>Prénom</span>
+              <input
+                ref={firstField}
+                name="firstName"
+                type="text"
+                autoComplete="given-name"
+                required
+              />
+            </label>
+            <label>
+              <span>Nom</span>
+              <input name="lastName" type="text" autoComplete="family-name" required />
+            </label>
           </div>
-        ) : (
-          <>
-            <p className="booking-eyebrow">Réservation</p>
-            <h2 id="booking-title">{offer.title}</h2>
-            <p className="booking-intro">{labels.formIntro}</p>
 
-            <form className="booking-form" onSubmit={handleSubmit}>
-              <div className="booking-row">
-                <label>
-                  <span>Prénom</span>
-                  <input
-                    ref={firstField}
-                    name="firstName"
-                    type="text"
-                    autoComplete="given-name"
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Nom</span>
-                  <input name="lastName" type="text" autoComplete="family-name" required />
-                </label>
-              </div>
+          <label>
+            <span>Ville de départ</span>
+            <input
+              name="city"
+              type="text"
+              list="booking-cities"
+              placeholder={offer.departureCities[0] || "Ta ville"}
+              autoComplete="address-level2"
+              required
+            />
+            {/* Les villes de l'offre sont proposees, sans empecher d'en saisir une autre. */}
+            <datalist id="booking-cities">
+              {offer.departureCities.map((city) => (
+                <option key={city} value={city} />
+              ))}
+            </datalist>
+          </label>
 
-              <label>
-                <span>Ville de départ</span>
-                <input
-                  name="city"
-                  type="text"
-                  list="booking-cities"
-                  placeholder={offer.departureCities[0] || "Ta ville"}
-                  autoComplete="address-level2"
-                  required
-                />
-                {/* Les villes de l'offre sont proposees, sans empecher d'en saisir une autre. */}
-                <datalist id="booking-cities">
-                  {offer.departureCities.map((city) => (
-                    <option key={city} value={city} />
-                  ))}
-                </datalist>
-              </label>
+          <label>
+            <span>Numéro de téléphone</span>
+            <input
+              name="phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="06 00 00 00 00"
+              pattern="[0-9+\s().-]{8,}"
+              title="Indique un numéro de téléphone valide"
+              required
+            />
+          </label>
 
-              <label>
-                <span>Numéro de téléphone</span>
-                <input
-                  name="phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="06 00 00 00 00"
-                  pattern="[0-9+\s().-]{8,}"
-                  title="Indique un numéro de téléphone valide"
-                  required
-                />
-              </label>
+          <label>
+            <span>Date de départ souhaitée</span>
+            <select name="departureDate" defaultValue={offer.departureDates[0] || ""} required>
+              {offer.departureDates.map((date) => (
+                <option key={date} value={date}>
+                  {date}
+                </option>
+              ))}
+            </select>
+          </label>
 
-              <label>
-                <span>Date de départ souhaitée</span>
-                <select name="departureDate" defaultValue={offer.departureDates[0] || ""} required>
-                  {offer.departureDates.map((date) => (
-                    <option key={date} value={date}>
-                      {date}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <button className="booking-submit" type="submit" disabled={sending}>
-                {sending ? "Envoi en cours…" : labels.formSubmit}
-              </button>
-              <p className="booking-note">{labels.formNote}</p>
-            </form>
-          </>
-        )}
+          <button className="booking-submit" type="submit" disabled={sending}>
+            {sending ? "Envoi en cours…" : labels.formSubmit}
+          </button>
+          <p className="booking-note">{labels.formNote}</p>
+        </form>
       </div>
     </div>
   );
