@@ -1949,7 +1949,10 @@ h3 {
   outline-offset: 1px;
 }
 
-.booking-form input:invalid:not(:placeholder-shown) {
+/* :user-invalid ne se declenche qu'apres une saisie ou une tentative d'envoi.
+   Avec :invalid, les champs obligatoires encore vides s'affichaient en rouge
+   des l'ouverture du formulaire, comme si la cliente avait deja fait une faute. */
+.booking-form input:user-invalid {
   border-color: #d63a3a;
 }
 
@@ -1970,6 +1973,214 @@ h3 {
 .booking-submit:hover {
   transform: translateY(-1px);
   background: #cf1a6d;
+}
+
+/* ---------------------------------------------------------------------------
+   Calendrier de choix de la date de depart.
+   --------------------------------------------------------------------------- */
+
+.booking-field {
+  display: grid;
+  gap: 7px;
+}
+
+.booking-label {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* Champ replie: meme allure que les autres champs du formulaire. */
+.cal-champ {
+  position: relative;
+}
+
+.cal-declencheur {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid rgba(229, 31, 121, 0.22);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.cal-declencheur.est-ouvert {
+  border-color: var(--pink);
+}
+
+.cal-declencheur.est-vide .cal-valeur {
+  color: var(--muted);
+}
+
+/* Majuscule sur le seul premier mot: "Dimanche 16 août 2026". */
+.cal-valeur {
+  display: block;
+}
+
+.cal-valeur::first-letter {
+  text-transform: uppercase;
+}
+
+.cal-chevron {
+  color: var(--pink);
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+.cal-declencheur.est-ouvert .cal-chevron {
+  transform: rotate(180deg);
+}
+
+/* Panneau deploye, volontairement compact. Il reste dans le flux plutot que de
+   flotter: en flottant il sortait du bas de la fenetre de reservation et se
+   retrouvait coupe. Ici le formulaire s'agrandit et defile normalement. */
+.cal {
+  max-width: 320px;
+  margin-top: 8px;
+  padding: 12px 12px 10px;
+  border: 1px solid rgba(229, 31, 121, 0.22);
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 18px 40px rgba(37, 34, 41, 0.18);
+}
+
+.cal-tete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cal-tete strong {
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.cal-fleche {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.cal-fleche:hover:not(:disabled) {
+  background: #ffd1e6;
+}
+
+.cal-fleche:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.cal-jours,
+.cal-grille {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-jours {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.cal-jour {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Rose indien: les jours ou un depart est possible. */
+.cal-jour.est-dispo {
+  background: var(--pink);
+  color: var(--white);
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.cal-jour.est-dispo:hover {
+  background: #cf1a6d;
+  transform: scale(1.08);
+}
+
+/* La date retenue change franchement de couleur et affiche une coche: on doit
+   voir d'un coup d'oeil laquelle est choisie. */
+.cal-jour.est-choisie {
+  background: #12a08a;
+  box-shadow: 0 0 0 2px rgba(18, 160, 138, 0.3);
+  font-size: 14px;
+}
+
+.cal-jour.est-choisie:hover {
+  background: #0e8a76;
+}
+
+.cal-jour.est-indispo {
+  color: #c8c2cb;
+}
+
+.cal-legende {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cal-pastille {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.cal-pastille.est-dispo {
+  background: var(--pink);
+}
+
+.cal-pastille.est-choisie {
+  margin-left: 10px;
+  background: #12a08a;
+}
+
+.booking-erreur {
+  margin: 0;
+  color: #b3123f;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .booking-note {

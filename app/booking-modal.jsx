@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { whatsappLink } from "../lib/whatsapp";
+import DateCalendar from "./date-calendar";
 
 // Message envoye a l'equipe: une phrase complete, lisible telle quelle dans
 // WhatsApp, qui reprend les reponses du formulaire.
@@ -20,6 +21,13 @@ function bookingMessage(offer, booking) {
 export default function BookingModal({ offer, phone, labels, onClose }) {
   const firstField = useRef(null);
   const [sending, setSending] = useState(false);
+
+  // Le calendrier n'a de sens que si les departs sont de vraies dates.
+  const avecCalendrier = offer.departureDates.some((date) => date.value);
+  const [dateChoisie, setDateChoisie] = useState(
+    () => offer.departureDates.find((date) => date.value)?.value || null
+  );
+  const [erreurDate, setErreurDate] = useState(false);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -40,10 +48,22 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
   async function handleSubmit(event) {
     event.preventDefault();
     if (sending) return;
-    setSending(true);
 
     const form = new FormData(event.currentTarget);
     const value = (name) => (form.get(name) || "").toString().trim();
+
+    // Le calendrier n'est pas un champ de formulaire: sa validation est faite ici.
+    const dateLabel = avecCalendrier
+      ? offer.departureDates.find((date) => date.value === dateChoisie)?.label
+      : value("departureDate");
+
+    if (!dateLabel) {
+      setErreurDate(true);
+      return;
+    }
+
+    setErreurDate(false);
+    setSending(true);
 
     const booking = {
       offer: offer.title,
@@ -51,7 +71,7 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
       lastName: value("lastName"),
       city: value("city"),
       phone: value("phone"),
-      departureDate: value("departureDate"),
+      departureDate: dateLabel,
     };
 
     // On enregistre dans la Google Sheet, puis on part vers WhatsApp. Une
@@ -137,16 +157,45 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
             />
           </label>
 
-          <label>
-            <span>Date de départ souhaitée</span>
-            <select name="departureDate" defaultValue={offer.departureDates[0] || ""} required>
-              {offer.departureDates.map((date) => (
-                <option key={date} value={date}>
-                  {date}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="booking-field">
+            <span className="booking-label" id="booking-date">
+              Date de départ souhaitée
+            </span>
+
+            {avecCalendrier ? (
+              <>
+                <DateCalendar
+                  dates={offer.departureDates}
+                  value={dateChoisie}
+                  onChange={(date) => {
+                    setDateChoisie(date);
+                    // Le reproche disparait des que la cliente corrige.
+                    if (date) setErreurDate(false);
+                  }}
+                />
+                {erreurDate ? (
+                  <p className="booking-erreur" role="alert">
+                    Choisis une date de départ dans le calendrier.
+                  </p>
+                ) : null}
+              </>
+            ) : (
+              // Voyage sans date precise (« Chaque dimanche »): pas de
+              // calendrier possible, on garde une liste.
+              <select
+                name="departureDate"
+                aria-labelledby="booking-date"
+                defaultValue={offer.departureDates[0]?.label || ""}
+                required
+              >
+                {offer.departureDates.map((date) => (
+                  <option key={date.label} value={date.label}>
+                    {date.label}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
 
           <button className="booking-submit" type="submit" disabled={sending}>
             {sending ? "Envoi en cours…" : labels.formSubmit}

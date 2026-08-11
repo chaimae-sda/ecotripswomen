@@ -1,3 +1,5 @@
+import DepartureDatesCalendar from "../components/departure-dates-calendar";
+
 export default {
   name: "offers",
   title: "Voyages à venir",
@@ -164,10 +166,11 @@ export default {
               title: "Dates de départ proposées",
               type: "array",
               description:
-                "Choisis chaque date de départ dans le calendrier. Ce sont les seules dates que " +
-                "la cliente pourra sélectionner dans le formulaire de réservation. Ajoute une " +
-                "ligne par départ. Si tu laisses vide, la date écrite plus haut est proposée.",
-              of: [{ type: "date", options: { dateFormat: "DD/MM/YYYY" } }],
+                "Clique sur les jours du calendrier pour ouvrir ou fermer un départ. Ce sont les " +
+                "seules dates que la cliente pourra choisir dans le formulaire de réservation. " +
+                "Si tu ne choisis rien, la date écrite plus haut est proposée.",
+              of: [{ type: "date" }],
+              components: { input: DepartureDatesCalendar },
             },
             {
               name: "departureCities",
