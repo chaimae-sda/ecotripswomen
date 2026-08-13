@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { whatsappLink } from "../lib/whatsapp";
 import DateCalendar from "./date-calendar";
+import Guarantees from "./guarantees";
 
 const MAX_PERSONNES = 12;
 
@@ -32,7 +33,7 @@ function bookingMessage(offer, booking) {
 // Formulaire de reservation en fenetre surgissante. A l'envoi, les reponses
 // sont enregistrees dans la Google Sheet puis WhatsApp s'ouvre avec le message
 // deja redige.
-export default function BookingModal({ offer, phone, labels, onClose }) {
+export default function BookingModal({ offer, phone, labels, guarantees = [], onClose }) {
   const firstField = useRef(null);
   const [sending, setSending] = useState(false);
 
@@ -135,6 +136,7 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
         <p className="booking-intro">{labels.formIntro}</p>
 
         <form className="booking-form" onSubmit={handleSubmit}>
+          <div className="booking-body">
           <div className="booking-row">
             <label>
               <span>Prénom</span>
@@ -152,7 +154,8 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
             </label>
           </div>
 
-          <label>
+          <div className="booking-row">
+            <label>
             <span>Ville de départ</span>
             <input
               name="city"
@@ -168,9 +171,9 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
                 <option key={city} value={city} />
               ))}
             </datalist>
-          </label>
+            </label>
 
-          <label>
+            <label>
             <span>Numéro de téléphone</span>
             <input
               name="phone"
@@ -182,9 +185,11 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
               title="Indique un numéro de téléphone valide"
               required
             />
-          </label>
+            </label>
+          </div>
 
-          <label>
+          <div className="booking-row">
+            <label>
             <span>Nombre de personnes</span>
             <input
               name="people"
@@ -203,36 +208,12 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
               }}
               required
             />
-          </label>
+            </label>
 
-          {accompagnantes > 0 && (
-            <fieldset className="booking-groupe">
-              <legend>
-                {accompagnantes === 1
-                  ? "La personne qui t'accompagne"
-                  : `Les ${accompagnantes} personnes qui t'accompagnent`}
-              </legend>
-
-              {Array.from({ length: accompagnantes }, (_, i) => (
-                <div className="booking-row" key={i}>
-                  <label>
-                    <span>Prénom · personne {i + 2}</span>
-                    <input name={`companionFirstName${i}`} type="text" required />
-                  </label>
-                  <label>
-                    <span>Nom · personne {i + 2}</span>
-                    <input name={`companionLastName${i}`} type="text" required />
-                  </label>
-                </div>
-              ))}
-            </fieldset>
-          )}
-
-          <div className="booking-field">
-            <span className="booking-label" id="booking-date">
-              Date de départ souhaitée
-            </span>
-
+            <div className="booking-field">
+              <span className="booking-label" id="booking-date">
+                Date de départ souhaitée
+              </span>
             {avecCalendrier ? (
               <>
                 <DateCalendar
@@ -266,12 +247,46 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
                 ))}
               </select>
             )}
+            </div>
           </div>
 
-          <button className="booking-submit" type="submit" disabled={sending}>
-            {sending ? "Envoi en cours…" : labels.formSubmit}
-          </button>
-          <p className="booking-note">{labels.formNote}</p>
+          {accompagnantes > 0 && (
+            <fieldset className="booking-groupe">
+              <legend>
+                {accompagnantes === 1
+                  ? "La personne qui t'accompagne"
+                  : `Les ${accompagnantes} personnes qui t'accompagnent`}
+              </legend>
+
+              {Array.from({ length: accompagnantes }, (_, i) => (
+                <div className="booking-row" key={i}>
+                  <label>
+                    <span>Prénom · personne {i + 2}</span>
+                    <input name={`companionFirstName${i}`} type="text" required />
+                  </label>
+                  <label>
+                    <span>Nom · personne {i + 2}</span>
+                    <input name={`companionLastName${i}`} type="text" required />
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+          )}
+
+
+          </div>
+
+          {/* Pied fixe: le bouton et les garanties restent visibles meme quand
+              le formulaire depasse la hauteur de l'ecran. */}
+          <div className="booking-pied">
+            <button className="booking-submit" type="submit" disabled={sending}>
+              {sending ? "Envoi en cours…" : labels.formSubmit}
+            </button>
+
+            <Guarantees items={guarantees} />
+
+            <p className="booking-note">{labels.formNote}</p>
+          </div>
         </form>
       </div>
     </div>

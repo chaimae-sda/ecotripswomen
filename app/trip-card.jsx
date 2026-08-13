@@ -9,7 +9,7 @@ import BookingModal from "./booking-modal";
 // La carte d'un voyage, utilisee par le carrousel de l'accueil et par la page
 // « Toutes les offres ». Le bouton Reserver ouvre le meme formulaire que la
 // page de detail.
-export default function TripCard({ offer, phone, labels }) {
+export default function TripCard({ offer, phone, labels, guarantees }) {
   const [bookingOpen, setBookingOpen] = useState(false);
 
   return (
@@ -52,6 +52,7 @@ export default function TripCard({ offer, phone, labels }) {
           offer={offer}
           phone={phone}
           labels={labels}
+          guarantees={guarantees}
           onClose={() => setBookingOpen(false)}
         />
       )}

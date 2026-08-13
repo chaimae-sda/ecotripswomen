@@ -23,7 +23,7 @@ function Select({ label, name, value, options, onChange }) {
   );
 }
 
-export default function OffersBrowser({ offers, phone, labels }) {
+export default function OffersBrowser({ offers, phone, labels, guarantees }) {
   const [filters, setFilters] = useState(EMPTY_FILTERS);
 
   const options = useMemo(() => buildFilterOptions(offers), [offers]);
@@ -89,7 +89,13 @@ export default function OffersBrowser({ offers, phone, labels }) {
       {visible.length > 0 ? (
         <div className="trip-grid">
           {visible.map((offer) => (
-            <TripCard key={offer.slug} offer={offer} phone={phone} labels={labels} />
+            <TripCard
+              key={offer.slug}
+              offer={offer}
+              phone={phone}
+              labels={labels}
+              guarantees={guarantees}
+            />
           ))}
         </div>
       ) : (

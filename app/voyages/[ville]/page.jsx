@@ -83,6 +83,7 @@ export default async function CityPage({ params }) {
               offer={offer}
               phone={settings.phone}
               labels={settings.labels}
+              guarantees={settings.guarantees}
             />
           ))}
         </div>

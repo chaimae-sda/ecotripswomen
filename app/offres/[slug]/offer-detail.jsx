@@ -6,9 +6,10 @@ import { useState } from "react";
 
 import { whatsappLink } from "../../../lib/whatsapp";
 import BookingModal from "../../booking-modal";
+import Guarantees from "../../guarantees";
 import Lightbox from "../../lightbox";
 
-export default function OfferDetail({ offer, phone, labels }) {
+export default function OfferDetail({ offer, phone, labels, guarantees }) {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -42,6 +43,8 @@ export default function OfferDetail({ offer, phone, labels }) {
             {labels.book}
             {offer.price ? <small>{offer.price}</small> : null}
           </button>
+
+          <Guarantees items={guarantees} className="offer-garanties" />
         </div>
 
         {offer.previousGallery.length > 0 && (
@@ -156,6 +159,7 @@ export default function OfferDetail({ offer, phone, labels }) {
           offer={offer}
           phone={phone}
           labels={labels}
+          guarantees={guarantees}
           onClose={() => setBookingOpen(false)}
         />
       )}

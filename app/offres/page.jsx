@@ -38,7 +38,12 @@ export default async function AllOffersPage() {
           {heading?.text ? <p>{heading.text}</p> : null}
         </div>
 
-        <OffersBrowser offers={offers} phone={settings.phone} labels={settings.labels} />
+        <OffersBrowser
+          offers={offers}
+          phone={settings.phone}
+          labels={settings.labels}
+          guarantees={settings.guarantees}
+        />
 
         {/* Chemin d'acces vers les pages par ville, pour les visiteuses comme
             pour Google. */}

@@ -323,6 +323,40 @@ export default {
       type: "sectionHeading",
       group: "voyages",
     },
+    {
+      name: "guarantees",
+      title: "Garanties sous le bouton de réservation",
+      type: "array",
+      group: "voyages",
+      description:
+        "Les engagements affichés juste sous « Envoyer ma réservation » : conditions " +
+        "d'annulation, montant de l'avance… Deux ou trois suffisent, au-delà le formulaire " +
+        "devient long. Vide la liste pour ne rien afficher.",
+      validation: (Rule) => Rule.max(3).warning("Au-delà de 3, le formulaire devient trop long."),
+      of: [
+        {
+          type: "object",
+          name: "guarantee",
+          fields: [
+            {
+              name: "title",
+              title: "Titre",
+              type: "string",
+              description: 'Court et clair, par exemple "Annulation gratuite".',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "text",
+              title: "Précision",
+              type: "text",
+              rows: 2,
+              description: 'Par exemple "Jusqu\'à 7 jours avant le départ, remboursement intégral."',
+            },
+          ],
+          preview: { select: { title: "title", subtitle: "text" } },
+        },
+      ],
+    },
     { ...labelsField, group: "voyages" },
     {
       name: "reviewsTitle",

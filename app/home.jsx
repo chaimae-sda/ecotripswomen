@@ -210,7 +210,12 @@ export default function Home({ content }) {
 
         <section className="section trips" id="offres">
           <SectionTitle heading={settings.offersTitle} />
-          <TripCarousel offers={offers} phone={settings.phone} labels={settings.labels} />
+          <TripCarousel
+            offers={offers}
+            phone={settings.phone}
+            labels={settings.labels}
+            guarantees={settings.guarantees}
+          />
           <div className="trips-more">
             <Link className="primary-btn" href="/offres">
               {settings.labels.allOffers}

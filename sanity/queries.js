@@ -32,6 +32,7 @@ export const siteContentQuery = `{
     stats[]{ value, label },
     offersTitle${headingFields},
     allOffersTitle${headingFields},
+    guarantees[]{ title, text },
     labels,
     videosTitle${headingFields},
     reviewsTitle${headingFields},

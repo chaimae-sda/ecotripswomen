@@ -57,7 +57,12 @@ export default async function OfferPage({ params }) {
     <>
       <OfferJsonLd offer={offer} />
       <SiteHeader settings={content.settings} base="/" />
-      <OfferDetail offer={offer} phone={content.settings.phone} labels={content.settings.labels} />
+      <OfferDetail
+        offer={offer}
+        phone={content.settings.phone}
+        labels={content.settings.labels}
+        guarantees={content.settings.guarantees}
+      />
       <SiteFooter settings={content.settings} base="/" />
     </>
   );

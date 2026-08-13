@@ -1836,7 +1836,7 @@ h3 {
 .offer-list.included li::before {
   content: "✓";
   left: 4px;
-  color: #2e9e6b;
+  color: var(--pink);
 }
 
 .offer-cta {
@@ -1894,9 +1894,14 @@ h3 {
 
 .booking-modal {
   position: relative;
-  width: min(560px, 100%);
+  display: flex;
+  flex-direction: column;
+  /* La fenetre ne depasse jamais l'ecran: c'est le formulaire qui defile,
+     jamais le pied, pour que les garanties restent toujours visibles. */
+  max-height: calc(100dvh - 20px);
+  width: min(600px, 100%);
   margin: auto;
-  padding: 40px 40px 34px;
+  padding: 22px 28px 16px;
   border-radius: 30px;
   /* Rose bebe: fond tres clair, champs blancs par-dessus. */
   background: linear-gradient(180deg, #ffe3ef 0%, #ffd6e8 100%);
@@ -1932,39 +1937,91 @@ h3 {
 }
 
 .booking-modal h2 {
-  font-size: clamp(28px, 5vw, 38px);
+  font-size: clamp(22px, 3.4vw, 27px);
 }
 
 .booking-intro {
-  margin: 14px 0 26px;
+  margin: 8px 0 14px;
   color: #7a5265;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.45;
 }
 
 .booking-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  /* min-height 0: sans cela un conteneur flex refuse de retrecir et le
+     defilement interne ne s'active jamais. */
+  min-height: 0;
+}
+
+/* Partie defilante: uniquement les champs. */
+.booking-body {
   display: grid;
-  gap: 16px;
+  gap: 10px;
+  overflow-y: auto;
+  /* overflow-y: auto rend aussi l'axe horizontal decoupant. Sans cette marge
+     interne, le contour rose du champ actif (dessine 2px au-dela du bord)
+     etait rogne a gauche et a droite. Les marges negatives annulent le
+     decalage pour que les champs gardent leur largeur. */
+  padding: 3px 5px;
+  margin: -3px -5px;
+}
+
+/* Ecrans peu hauts (petits portables, fenetre reduite): on sacrifie la phrase
+   d'introduction et on resserre, plutot que d'imposer un defilement. */
+@media (max-height: 660px) {
+  .booking-modal {
+    padding: 16px 24px 12px;
+  }
+
+  .booking-intro {
+    display: none;
+  }
+
+  .booking-modal h2 {
+    font-size: 22px;
+  }
+
+  .booking-note {
+    margin-top: 2px;
+  }
+}
+
+/* Pied toujours visible, sous le formulaire. Le trait et l'ombre montante
+   signalent que le formulaire continue au-dessus, sinon le dernier champ
+   semble coupe par erreur. */
+.booking-pied {
+  flex: 0 0 auto;
+  padding-top: 12px;
+  /* Simple filet de separation. Plus d'ombre montante: le formulaire tient
+     desormais sans defiler, l'ombre se lisait comme une coupure. */
+  border-top: 1px solid rgba(229, 31, 121, 0.16);
 }
 
 .booking-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* start, pas stretch: quand le calendrier se deplie dans une colonne, la
+     rangee grandit, et sans cela le champ voisin (« Nombre de personnes »)
+     s'etirait sur toute la hauteur. */
+  align-items: start;
   gap: 16px;
 }
 
 .booking-form label {
   display: grid;
-  gap: 7px;
-  font-size: 14px;
+  gap: 5px;
+  font-size: 13px;
   font-weight: 900;
 }
 
 .booking-form input,
 .booking-form select {
   width: 100%;
-  min-height: 50px;
-  padding: 0 16px;
+  min-height: 46px;
+  padding: 0 14px;
   border: 1px solid rgba(229, 31, 121, 0.22);
   border-radius: 14px;
   background: var(--white);
@@ -2007,9 +2064,70 @@ h3 {
   margin-bottom: 12px;
 }
 
+/* Garanties: les engagements de l'agence. Le meme bloc sert sur la page d'un
+   voyage et dans la fenetre de reservation. */
+.garanties {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.garanties li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  line-height: 1.35;
+}
+
+.garantie-coche {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.garanties strong {
+  display: block;
+  font-size: 14px;
+}
+
+.garanties em {
+  display: block;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-style: normal;
+}
+
+/* Dans la fenetre rose, le texte secondaire prend un gris rose plus lisible. */
+.booking-pied .garanties {
+  margin: 14px 0 10px;
+}
+
+.booking-pied .garanties em {
+  color: #7a5265;
+}
+
+/* Sous le grand bouton d'une page voyage. */
+.offer-garanties {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+}
+
 .booking-submit {
-  min-height: 56px;
-  margin-top: 8px;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 0;
   border: 0;
   border-radius: 999px;
   background: var(--pink);
@@ -2049,10 +2167,10 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  min-height: 50px;
-  padding: 0 16px;
+  min-height: 46px;
+  padding: 0 14px;
   border: 1px solid rgba(229, 31, 121, 0.22);
   border-radius: 14px;
   background: var(--white);
@@ -2237,7 +2355,7 @@ h3 {
 .booking-note {
   margin: 0;
   color: #7a5265;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.5;
   text-align: center;
 }
