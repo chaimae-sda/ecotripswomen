@@ -33,6 +33,8 @@ export const siteContentQuery = `{
     offersTitle${headingFields},
     allOffersTitle${headingFields},
     guarantees[]{ title, text },
+    faqTitle${headingFields},
+    faq[]{ question, answer },
     labels,
     videosTitle${headingFields},
     reviewsTitle${headingFields},

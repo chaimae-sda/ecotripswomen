@@ -324,6 +324,44 @@ export default {
       group: "voyages",
     },
     {
+      name: "faqTitle",
+      title: "Titre de la section Questions fréquentes",
+      type: "sectionHeading",
+      group: "titres",
+    },
+    {
+      name: "faq",
+      title: "Questions fréquentes",
+      type: "array",
+      group: "titres",
+      description:
+        "Affichées en bas de la page d'accueil. C'est aussi ce que Google peut reprendre " +
+        "directement dans ses résultats : écris des questions telles que tes clientes les " +
+        "posent, et des réponses complètes. Vide la liste pour masquer la section.",
+      of: [
+        {
+          type: "object",
+          name: "question",
+          fields: [
+            {
+              name: "question",
+              title: "Question",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "answer",
+              title: "Réponse",
+              type: "text",
+              rows: 4,
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: { select: { title: "question", subtitle: "answer" } },
+        },
+      ],
+    },
+    {
       name: "guarantees",
       title: "Garanties sous le bouton de réservation",
       type: "array",

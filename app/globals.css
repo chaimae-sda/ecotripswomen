@@ -19,6 +19,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Le bandeau du haut reste colle a l'ecran et mesure 98px (14px de decalage +
+   84px de hauteur). Sans cette marge, sauter vers une section l'amenait
+   exactement sous le bandeau, qui masquait son titre. */
+#offres,
+#fonctionnement,
+#videos,
+#avis,
+#galerie,
+#faq,
+#contact {
+  scroll-margin-top: 118px;
+}
+
 body {
   margin: 0;
   color: var(--ink);
@@ -78,10 +91,10 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 30px;
   color: var(--muted);
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 900;
 }
 
 .main-nav a:hover {
@@ -1188,10 +1201,17 @@ h3 {
 .site-footer nav {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 16px;
   color: var(--muted);
   font-weight: 900;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1442,6 +1462,79 @@ h3 {
   font-size: 13px;
   font-weight: 500;
   line-height: 1.5;
+}
+
+/* Questions frequentes. */
+.faq-liste {
+  display: grid;
+  gap: 12px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.faq-liste details {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.faq-liste summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 24px;
+  font-size: 17px;
+  font-weight: 900;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-liste summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-liste details[open] summary {
+  color: var(--pink);
+}
+
+/* Croix qui pivote en moins a l'ouverture, dessinee sans image. */
+.faq-plus {
+  position: relative;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pink-soft);
+}
+
+.faq-plus::before,
+.faq-plus::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  background: var(--pink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.faq-plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq-liste details[open] .faq-plus::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faq-liste p {
+  margin: 0;
+  padding: 0 24px 22px;
+  color: var(--muted);
+  line-height: 1.65;
 }
 
 /* Liens vers les pages par ville. */
@@ -2513,6 +2606,74 @@ h3 {
 }
 
 @media (max-width: 760px) {
+  /* Bandeau plus court sur telephone: 8px + 70px. */
+  #offres,
+  #fonctionnement,
+  #videos,
+  #avis,
+  #galerie,
+  #faq,
+  #contact {
+    scroll-margin-top: 98px;
+  }
+
+  /* Pied de page: une colonne centree. En alignant a gauche, les liens se
+     cassaient n'importe ou et "Contact" se retrouvait seul a cote du bouton. */
+  .site-footer {
+    justify-items: center;
+    gap: 24px;
+    padding: 44px 0 40px;
+    text-align: center;
+  }
+
+  .footer-claim p {
+    font-size: clamp(34px, 11vw, 52px);
+  }
+
+  .site-footer img {
+    width: 132px;
+    max-height: 132px;
+    justify-self: center;
+  }
+
+  .site-footer nav {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 22px;
+  }
+
+  .social-links {
+    justify-content: center;
+    margin: 0;
+  }
+
+  /* Les 5 liens font 428px, l'ecran 358: deux lignes sont inevitables. On bride
+     la largeur pour qu'elles se repartissent 3 puis 2, plutot que 4 puis un
+     "Contact" tout seul. */
+  .footer-links {
+    justify-content: center;
+    max-width: 300px;
+    gap: 14px 22px;
+  }
+
+  /* Le bouton prend toute la largeur: il devient l'action evidente du bas de
+     page, au lieu de flotter a cote d'un lien. */
+  .install-app {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .install-btn {
+    justify-content: center;
+    min-height: 46px;
+  }
+
+  .install-help {
+    max-width: none;
+    text-align: center;
+  }
+
   .site-header {
     top: 8px;
     min-height: 70px;
@@ -2535,6 +2696,11 @@ h3 {
     left: 0;
     right: 0;
     display: grid;
+    /* La regle de base du menu porte justify-content: center pour la barre
+       horizontale. En grille, elle centrait la colonne au lieu de l'etirer et
+       creusait une marge de chaque cote. On force la colonne pleine largeur. */
+    grid-template-columns: 1fr;
+    justify-content: stretch;
     gap: 0;
     padding: 12px;
     border-radius: 22px;

@@ -1,5 +1,5 @@
 import Home from "./home";
-import { AgencyJsonLd } from "./structured-data";
+import { AgencyJsonLd, FaqJsonLd } from "./structured-data";
 import { getSiteContent } from "../lib/content";
 
 // Le contenu est relu au maximum toutes les 60 secondes: une modification faite
@@ -30,6 +30,7 @@ export default async function HomePage() {
   return (
     <>
       <AgencyJsonLd settings={content.settings} />
+      <FaqJsonLd items={content.settings.faq} />
       <Home content={content} />
     </>
   );

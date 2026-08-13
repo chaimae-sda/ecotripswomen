@@ -95,3 +95,22 @@ export function OfferJsonLd({ offer }) {
     </>
   );
 }
+
+// Questions frequentes: Google peut les afficher directement sous le resultat.
+export function FaqJsonLd({ items }) {
+  if (!items?.length) return null;
+
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      }}
+    />
+  );
+}

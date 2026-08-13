@@ -108,15 +108,19 @@ function ScrollVideo({ item, tall, onOpen }) {
       aria-label={`Agrandir: ${item.alt}`}
       onClick={onOpen}
     >
-      {/* poster + autoPlay: sur iOS la lecture auto peut etre bloquee (mode economie
-          d'energie), l'image de couverture garantit qu'on voit toujours quelque chose. */}
+      {/* Pas d'attribut autoPlay: le navigateur l'interprete comme un ordre de
+          telecharger la video tout de suite et ignore preload="none". Les trois
+          videos (plus de 11 Mo) arrivaient donc des l'ouverture de la page, alors
+          qu'elles sont tout en bas. C'est l'observateur ci-dessus qui lance la
+          lecture, uniquement quand la video approche de l'ecran.
+          L'image de couverture reste indispensable: sur iOS la lecture auto peut
+          etre bloquee (mode economie d'energie). */}
       <video
         ref={ref}
         src={item.src}
         poster={item.poster || undefined}
         muted
         loop
-        autoPlay
         playsInline
         preload="none"
         tabIndex={-1}
@@ -321,6 +325,25 @@ export default function Home({ content }) {
             ))}
           </div>
         </section>
+
+        {settings.faq.length > 0 && (
+          <section className="section faq" id="faq" aria-labelledby="faq-titre">
+            <SectionTitle heading={settings.faqTitle} id="faq-titre" />
+            <div className="faq-liste">
+              {settings.faq.map((item) => (
+                /* <details>: la reponse est dans le HTML meme repliee, donc lue
+                   par Google, tout en gardant la page courte a l'ecran. */
+                <details key={item.question}>
+                  <summary>
+                    <span>{item.question}</span>
+                    <span className="faq-plus" aria-hidden="true" />
+                  </summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="community-band">
           <div>
