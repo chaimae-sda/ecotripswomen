@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import InstallApp from "./install-app";
+import SocialLinks from "./social-links";
 
 const LINKS = [
   { href: "#offres", label: "Offres" },
@@ -28,6 +29,7 @@ export default function SiteFooter({ settings, base = "" }) {
         height={settings.logo.height}
       />
       <nav aria-label="Pied de page">
+        <SocialLinks settings={settings} />
         {LINKS.map((link) => (
           <Link key={link.href} href={`${base}${link.href}`}>
             {link.label}

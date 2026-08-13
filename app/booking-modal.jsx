@@ -5,13 +5,27 @@ import { useEffect, useRef, useState } from "react";
 import { whatsappLink } from "../lib/whatsapp";
 import DateCalendar from "./date-calendar";
 
+const MAX_PERSONNES = 12;
+
+// "Sara Benali, Imane Alami et Nadia Chaoui"
+function enumerer(noms) {
+  if (noms.length < 2) return noms.join("");
+  return `${noms.slice(0, -1).join(", ")} et ${noms[noms.length - 1]}`;
+}
+
 // Message envoye a l'equipe: une phrase complete, lisible telle quelle dans
 // WhatsApp, qui reprend les reponses du formulaire.
 function bookingMessage(offer, booking) {
-  return (
+  const debut =
     `Bonjour, je suis ${booking.firstName} ${booking.lastName} ` +
     `et je souhaite réserver pour le voyage ${offer.title} ` +
-    `au départ de ${booking.city} le ${booking.departureDate}.`
+    `au départ de ${booking.city} le ${booking.departureDate}`;
+
+  if (booking.people < 2) return `${debut}.`;
+
+  return (
+    `${debut}, pour ${booking.people} personnes : ` +
+    `${enumerer([`${booking.firstName} ${booking.lastName}`, ...booking.companions])}.`
   );
 }
 
@@ -28,6 +42,11 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
     () => offer.departureDates.find((date) => date.value)?.value || null
   );
   const [erreurDate, setErreurDate] = useState(false);
+
+  // Nombre de voyageuses. Au-dela d'une, on demande le prenom et le nom de
+  // chaque accompagnante, et rien d'autre.
+  const [personnes, setPersonnes] = useState(1);
+  const accompagnantes = Math.max(0, personnes - 1);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -65,6 +84,10 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
     setErreurDate(false);
     setSending(true);
 
+    const companions = Array.from({ length: accompagnantes }, (_, i) =>
+      `${value(`companionFirstName${i}`)} ${value(`companionLastName${i}`)}`.trim()
+    ).filter(Boolean);
+
     const booking = {
       offer: offer.title,
       firstName: value("firstName"),
@@ -72,6 +95,10 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
       city: value("city"),
       phone: value("phone"),
       departureDate: dateLabel,
+      people: personnes,
+      companions,
+      // Une seule colonne lisible dans la feuille, plutot qu'un nom par colonne.
+      travellers: [`${value("firstName")} ${value("lastName")}`, ...companions].join(", "),
     };
 
     // On enregistre dans la Google Sheet, puis on part vers WhatsApp. Une
@@ -156,6 +183,50 @@ export default function BookingModal({ offer, phone, labels, onClose }) {
               required
             />
           </label>
+
+          <label>
+            <span>Nombre de personnes</span>
+            <input
+              name="people"
+              type="number"
+              inputMode="numeric"
+              min="1"
+              max={MAX_PERSONNES}
+              step="1"
+              value={personnes}
+              onChange={(event) => {
+                const saisi = Number(event.target.value);
+                // On borne tout de suite: un champ vide ou 99 ferait apparaitre
+                // un nombre absurde de lignes de noms.
+                if (!Number.isFinite(saisi)) return;
+                setPersonnes(Math.min(MAX_PERSONNES, Math.max(1, Math.trunc(saisi))));
+              }}
+              required
+            />
+          </label>
+
+          {accompagnantes > 0 && (
+            <fieldset className="booking-groupe">
+              <legend>
+                {accompagnantes === 1
+                  ? "La personne qui t'accompagne"
+                  : `Les ${accompagnantes} personnes qui t'accompagnent`}
+              </legend>
+
+              {Array.from({ length: accompagnantes }, (_, i) => (
+                <div className="booking-row" key={i}>
+                  <label>
+                    <span>Prénom · personne {i + 2}</span>
+                    <input name={`companionFirstName${i}`} type="text" required />
+                  </label>
+                  <label>
+                    <span>Nom · personne {i + 2}</span>
+                    <input name={`companionLastName${i}`} type="text" required />
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+          )}
 
           <div className="booking-field">
             <span className="booking-label" id="booking-date">

@@ -98,6 +98,13 @@ Cette page se remplit avec les champs situés sous *Message WhatsApp pré-rempli
 
 Tous les boutons **Réserver** du site ouvrent la même fenêtre rose : ceux des cartes sur la page d'accueil, ceux de la page *Toutes les offres*, et le grand bouton sous l'affiche d'une page voyage. Elle demande le prénom, le nom, la ville de départ, le téléphone et la date de départ souhaitée.
 
+Le champ **Nombre de personnes** commande le reste : dès 2, le formulaire demande le **prénom et le nom** de chaque accompagnante — et rien d'autre. Un seul numéro de téléphone est collecté, celui de la personne qui réserve. Maximum 12 personnes.
+
+Dans la feuille, deux colonnes récapitulent le groupe :
+
+- **Nombre de personnes** : `3`
+- **Voyageuses** : `Sara Benali, Imane Alami, Nadia Chaoui`
+
 Au clic sur *Envoyer ma réservation* :
 
 1. la réservation est ajoutée à ta **Google Sheet** (voir la section 3) ;
@@ -155,7 +162,7 @@ Le titre de cette page et les textes des boutons se modifient dans **Réglages d
 1. Va sur [sheets.new](https://sheets.new) et nomme la feuille **Réservations EcoTrips**.
 2. Sur la **première ligne**, écris ces en-têtes, une par colonne :
 
-   `Date` · `Voyage` · `Prénom` · `Nom` · `Ville de départ` · `Téléphone` · `Date souhaitée`
+   `Date` · `Voyage` · `Prénom` · `Nom` · `Ville de départ` · `Téléphone` · `Date souhaitée` · `Nombre de personnes` · `Voyageuses`
 
 ### b. Coller le script
 
@@ -173,7 +180,9 @@ function doPost(e) {
     d.lastName,
     d.city,
     d.phone,
-    d.departureDate
+    d.departureDate,
+    d.people,
+    d.travellers
   ]);
 
   return ContentService

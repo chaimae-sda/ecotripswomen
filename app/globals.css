@@ -1369,6 +1369,37 @@ h3 {
   font-weight: 900;
 }
 
+/* Icones des reseaux sociaux, au-dessus des liens du pied de page. */
+.social-links {
+  /* Toute la largeur: la rangee se place seule au-dessus des liens. */
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.social-links a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(229, 31, 121, 0.28);
+  border-radius: 50%;
+  background: var(--pink-soft);
+  color: var(--pink);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.social-links a:hover {
+  background: var(--pink);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
 /* Bouton d'installation de l'application, dans le pied de page. */
 .install-app {
   position: relative;
@@ -1954,6 +1985,26 @@ h3 {
    des l'ouverture du formulaire, comme si la cliente avait deja fait une faute. */
 .booking-form input:user-invalid {
   border-color: #d63a3a;
+}
+
+/* Bloc des accompagnantes: apparait des que la reservation depasse une place. */
+.booking-groupe {
+  margin: 0;
+  padding: 14px 16px 2px;
+  border: 1px solid rgba(229, 31, 121, 0.24);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.booking-groupe legend {
+  padding: 0 8px;
+  color: var(--pink);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.booking-groupe .booking-row {
+  margin-bottom: 12px;
 }
 
 .booking-submit {

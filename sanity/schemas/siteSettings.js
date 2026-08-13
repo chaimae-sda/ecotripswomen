@@ -261,6 +261,27 @@ export default {
       group: "identite",
     },
     {
+      name: "facebookUrl",
+      title: "Lien Facebook",
+      type: "url",
+      group: "identite",
+      description: "Laisse vide pour masquer l'icône dans le pied de page.",
+    },
+    {
+      name: "tiktokUrl",
+      title: "Lien TikTok",
+      type: "url",
+      group: "identite",
+      description: "Laisse vide pour masquer l'icône dans le pied de page.",
+    },
+    {
+      name: "youtubeUrl",
+      title: "Lien YouTube",
+      type: "url",
+      group: "identite",
+      description: "Laisse vide pour masquer l'icône dans le pied de page.",
+    },
+    {
       name: "googleReviewsUrl",
       title: "Lien vers la fiche Google",
       type: "url",
