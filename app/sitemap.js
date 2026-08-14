@@ -11,20 +11,24 @@ export default async function sitemap() {
   const { offers } = await getSiteContent();
   const now = new Date();
 
+  const villes = buildCityIndex(offers);
+
+  // Chaque adresse est declaree dans les deux langues, avec le lien vers son
+  // equivalent: Google comprend ainsi qu'il s'agit du meme contenu traduit.
+  function paire(chemin, priority) {
+    const fr = `${siteUrl}${chemin}`;
+    const en = `${siteUrl}/en${chemin === "/" ? "" : chemin}`;
+    const alternates = { languages: { fr, en } };
+    return [
+      { url: fr, lastModified: now, changeFrequency: "weekly", priority, alternates },
+      { url: en, lastModified: now, changeFrequency: "weekly", priority, alternates },
+    ];
+  }
+
   return [
-    { url: `${siteUrl}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: `${siteUrl}/offres`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    ...offers.map((offer) => ({
-      url: `${siteUrl}/offres/${offer.slug}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    })),
-    ...buildCityIndex(offers).map((city) => ({
-      url: `${siteUrl}/voyages/${city.slug}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    })),
+    ...paire("/", 1),
+    ...paire("/offres", 0.9),
+    ...offers.flatMap((offer) => paire(`/offres/${offer.slug}`, 0.8)),
+    ...villes.flatMap((city) => paire(`/voyages/${city.slug}`, 0.7)),
   ];
 }

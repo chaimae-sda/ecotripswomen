@@ -1,23 +1,22 @@
 import { notFound } from "next/navigation";
 
-import { getSiteContent } from "../../../lib/content";
-import { siteUrl } from "../../../lib/site";
-import SiteFooter from "../../site-footer";
-import SiteHeader from "../../site-header";
-import { OfferJsonLd } from "../../structured-data";
-import OfferDetail from "./offer-detail";
+import { getSiteContent } from "../../../../lib/content";
+import { siteUrl } from "../../../../lib/site";
+import SiteFooter from "../../../site-footer";
+import SiteHeader from "../../../site-header";
+import { OfferJsonLd } from "../../../structured-data";
+import OfferDetail from "../../../offres/[slug]/offer-detail";
+import HtmlLang from "../../../html-lang";
 
 export const revalidate = 60;
 
 async function findOffer(slug) {
-  const content = await getSiteContent();
+  const content = await getSiteContent("en");
   return { content, offer: content.offers.find((item) => item.slug === slug) };
 }
 
-// Une page est pregeneree pour chaque voyage; un voyage ajoute plus tard dans
-// le Studio obtient la sienne au premier affichage.
 export async function generateStaticParams() {
-  const { offers } = await getSiteContent();
+  const { offers } = await getSiteContent("en");
   return offers.map((offer) => ({ slug: offer.slug }));
 }
 
@@ -27,19 +26,14 @@ export async function generateMetadata({ params }) {
   if (!offer) return {};
 
   const details = [offer.date, offer.departure, offer.price].filter(Boolean).join(" · ");
-
-  // Le titre porte les mots que les clientes tapent, pas seulement le nom du
-  // voyage: "Nador - El Houceima" seul ne dit rien a Google.
-  const title = `${offer.title} — voyage 100% femmes au Maroc | EcoTrips Women`;
-  const description = offer.summary
-    ? `${offer.summary} Voyage organisé entre femmes${offer.departure ? `, ${offer.departure.replace(/^\s*d[ée]part\s*/i, "départ ")}` : ""}.`
-    : `${offer.title} : voyage organisé 100% femmes au Maroc avec EcoTrips Women. ${details}`;
+  const title = `${offer.title} — women-only trip in Morocco | EcoTrips Women`;
+  const description = offer.summary || details;
 
   return {
     title,
     description,
     alternates: {
-      canonical: `/offres/${offer.slug}`,
+      canonical: `/en/offres/${offer.slug}`,
       languages: {
         fr: `${siteUrl}/offres/${offer.slug}`,
         en: `${siteUrl}/en/offres/${offer.slug}`,
@@ -48,23 +42,25 @@ export async function generateMetadata({ params }) {
     },
     openGraph: {
       type: "article",
-      url: `/offres/${offer.slug}`,
+      url: `/en/offres/${offer.slug}`,
       title,
       description,
+      locale: "en_GB",
       images: offer.image?.url ? [offer.image.url] : [],
     },
   };
 }
 
-export default async function OfferPage({ params }) {
+export default async function OfferPageEn({ params }) {
   const { slug } = await params;
   const { content, offer } = await findOffer(slug);
   if (!offer) notFound();
 
   return (
     <>
+      <HtmlLang lang="en" />
       <OfferJsonLd offer={offer} />
-      <SiteHeader settings={content.settings} base="/" />
+      <SiteHeader settings={content.settings} base="/en/" />
       <OfferDetail
         offer={offer}
         phone={content.settings.phone}
@@ -72,7 +68,7 @@ export default async function OfferPage({ params }) {
         guarantees={content.settings.guarantees}
         ui={content.ui}
       />
-      <SiteFooter settings={content.settings} base="/" />
+      <SiteFooter settings={content.settings} base="/en/" />
     </>
   );
 }

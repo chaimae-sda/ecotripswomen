@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { format } from "../lib/ui";
 import { whatsappLink } from "../lib/whatsapp";
 import DateCalendar from "./date-calendar";
 import Guarantees from "./guarantees";
@@ -9,31 +10,32 @@ import Guarantees from "./guarantees";
 const MAX_PERSONNES = 12;
 
 // "Sara Benali, Imane Alami et Nadia Chaoui"
-function enumerer(noms) {
+function enumerer(noms, et) {
   if (noms.length < 2) return noms.join("");
-  return `${noms.slice(0, -1).join(", ")} et ${noms[noms.length - 1]}`;
+  return `${noms.slice(0, -1).join(", ")} ${et} ${noms[noms.length - 1]}`;
 }
 
 // Message envoye a l'equipe: une phrase complete, lisible telle quelle dans
 // WhatsApp, qui reprend les reponses du formulaire.
-function bookingMessage(offer, booking) {
-  const debut =
-    `Bonjour, je suis ${booking.firstName} ${booking.lastName} ` +
-    `et je souhaite réserver pour le voyage ${offer.title} ` +
-    `au départ de ${booking.city} le ${booking.departureDate}`;
+function bookingMessage(offer, booking, ui) {
+  const debut = format(ui.messageDebut, {
+    prenom: booking.firstName,
+    nom: booking.lastName,
+    voyage: offer.title,
+    ville: booking.city,
+    date: booking.departureDate,
+  });
 
   if (booking.people < 2) return `${debut}.`;
 
-  return (
-    `${debut}, pour ${booking.people} personnes : ` +
-    `${enumerer([`${booking.firstName} ${booking.lastName}`, ...booking.companions])}.`
-  );
+  const noms = enumerer([`${booking.firstName} ${booking.lastName}`, ...booking.companions], ui.et);
+  return `${debut}${format(ui.messagePersonnes, { n: booking.people, noms })}.`;
 }
 
 // Formulaire de reservation en fenetre surgissante. A l'envoi, les reponses
 // sont enregistrees dans la Google Sheet puis WhatsApp s'ouvre avec le message
 // deja redige.
-export default function BookingModal({ offer, phone, labels, guarantees = [], onClose }) {
+export default function BookingModal({ offer, phone, labels, guarantees = [], ui, onClose }) {
   const firstField = useRef(null);
   const [sending, setSending] = useState(false);
 
@@ -115,7 +117,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
       /* on poursuit vers WhatsApp */
     }
 
-    window.location.href = whatsappLink(phone, bookingMessage(offer, booking));
+    window.location.href = whatsappLink(phone, bookingMessage(offer, booking, ui));
   }
 
   return (
@@ -127,11 +129,11 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
       onClick={onClose}
     >
       <div className="booking-modal" onClick={(event) => event.stopPropagation()}>
-        <button className="booking-close" type="button" aria-label="Fermer" onClick={onClose}>
+        <button className="booking-close" type="button" aria-label={ui.fermer} onClick={onClose}>
           <span aria-hidden="true">×</span>
         </button>
 
-        <p className="booking-eyebrow">Réservation</p>
+        <p className="booking-eyebrow">{ui.reservation}</p>
         <h2 id="booking-title">{offer.title}</h2>
         <p className="booking-intro">{labels.formIntro}</p>
 
@@ -139,7 +141,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
           <div className="booking-body">
           <div className="booking-row">
             <label>
-              <span>Prénom</span>
+              <span>{ui.prenom}</span>
               <input
                 ref={firstField}
                 name="firstName"
@@ -149,19 +151,19 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
               />
             </label>
             <label>
-              <span>Nom</span>
+              <span>{ui.nom}</span>
               <input name="lastName" type="text" autoComplete="family-name" required />
             </label>
           </div>
 
           <div className="booking-row">
             <label>
-            <span>Ville de départ</span>
+            <span>{ui.villeDepart}</span>
             <input
               name="city"
               type="text"
               list="booking-cities"
-              placeholder={offer.departureCities[0] || "Ta ville"}
+              placeholder={offer.departureCities[0] || ui.taVille}
               autoComplete="address-level2"
               required
             />
@@ -174,7 +176,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
             </label>
 
             <label>
-            <span>Numéro de téléphone</span>
+            <span>{ui.telephone}</span>
             <input
               name="phone"
               type="tel"
@@ -182,7 +184,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
               autoComplete="tel"
               placeholder="06 00 00 00 00"
               pattern="[0-9+\s().-]{8,}"
-              title="Indique un numéro de téléphone valide"
+              title={ui.telephoneInvalide}
               required
             />
             </label>
@@ -190,7 +192,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
 
           <div className="booking-row">
             <label>
-            <span>Nombre de personnes</span>
+            <span>{ui.nombrePersonnes}</span>
             <input
               name="people"
               type="number"
@@ -212,11 +214,12 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
 
             <div className="booking-field">
               <span className="booking-label" id="booking-date">
-                Date de départ souhaitée
+                {ui.dateDepart}
               </span>
             {avecCalendrier ? (
               <>
                 <DateCalendar
+                  ui={ui}
                   dates={offer.departureDates}
                   value={dateChoisie}
                   onChange={(date) => {
@@ -254,18 +257,18 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
             <fieldset className="booking-groupe">
               <legend>
                 {accompagnantes === 1
-                  ? "La personne qui t'accompagne"
-                  : `Les ${accompagnantes} personnes qui t'accompagnent`}
+                  ? ui.accompagnanteUne
+                  : format(ui.accompagnantesPlusieurs, { n: accompagnantes })}
               </legend>
 
               {Array.from({ length: accompagnantes }, (_, i) => (
                 <div className="booking-row" key={i}>
                   <label>
-                    <span>Prénom · personne {i + 2}</span>
+                    <span>{format(ui.prenomPersonne, { n: i + 2 })}</span>
                     <input name={`companionFirstName${i}`} type="text" required />
                   </label>
                   <label>
-                    <span>Nom · personne {i + 2}</span>
+                    <span>{format(ui.nomPersonne, { n: i + 2 })}</span>
                     <input name={`companionLastName${i}`} type="text" required />
                   </label>
                 </div>
@@ -280,7 +283,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], on
               le formulaire depasse la hauteur de l'ecran. */}
           <div className="booking-pied">
             <button className="booking-submit" type="submit" disabled={sending}>
-              {sending ? "Envoi en cours…" : labels.formSubmit}
+              {sending ? ui.envoiEnCours : labels.formSubmit}
             </button>
 
             <Guarantees items={guarantees} />

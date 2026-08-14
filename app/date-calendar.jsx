@@ -2,32 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// Lundi en premier, comme les calendriers francais.
-const JOURS = ["L", "M", "M", "J", "V", "S", "D"];
-const MOIS = [
-  "janvier",
-  "février",
-  "mars",
-  "avril",
-  "mai",
-  "juin",
-  "juillet",
-  "août",
-  "septembre",
-  "octobre",
-  "novembre",
-  "décembre",
-];
-
 // Les dates sont des jours sans heure: tout est calcule en UTC pour qu'un
 // fuseau horaire ne decale pas l'affichage d'un jour.
 function moisDe(iso) {
   return `${iso.slice(0, 4)}-${iso.slice(5, 7)}`;
 }
 
-function libelleMois(cle) {
+function libelleMois(cle, ui) {
   const [annee, mois] = cle.split("-");
-  return `${MOIS[Number(mois) - 1]} ${annee}`;
+  return `${ui.mois[Number(mois) - 1]} ${annee}`;
 }
 
 // Grille du mois: cases vides jusqu'au premier jour, puis les jours.
@@ -52,7 +35,7 @@ function grille(cle) {
 //
 // Le calendrier reste replie: le champ affiche la date retenue et ne se deploie
 // qu'au clic, pour ne pas occuper toute la fenetre de reservation.
-export default function DateCalendar({ dates, value, onChange, id }) {
+export default function DateCalendar({ dates, value, onChange, id, ui }) {
   const [ouvert, setOuvert] = useState(false);
   const boite = useRef(null);
   const panneau = useRef(null);
@@ -122,7 +105,7 @@ export default function DateCalendar({ dates, value, onChange, id }) {
         aria-expanded={ouvert}
         onClick={() => setOuvert((valeur) => !valeur)}
       >
-        <span className="cal-valeur">{libelleChoisi || "Choisir une date"}</span>
+        <span className="cal-valeur">{libelleChoisi || ui.choisirDate}</span>
         <span className="cal-chevron" aria-hidden="true">
           ▾
         </span>
@@ -134,17 +117,17 @@ export default function DateCalendar({ dates, value, onChange, id }) {
             <button
               className="cal-fleche"
               type="button"
-              aria-label="Mois précédent"
+              aria-label={ui.moisPrecedent}
               disabled={index === 0}
               onClick={() => setIndex((i) => i - 1)}
             >
               <span aria-hidden="true">‹</span>
             </button>
-            <strong aria-live="polite">{libelleMois(cle)}</strong>
+            <strong aria-live="polite">{libelleMois(cle, ui)}</strong>
             <button
               className="cal-fleche"
               type="button"
-              aria-label="Mois suivant"
+              aria-label={ui.moisSuivant}
               disabled={index === moisDisponibles.length - 1}
               onClick={() => setIndex((i) => i + 1)}
             >
@@ -153,12 +136,12 @@ export default function DateCalendar({ dates, value, onChange, id }) {
           </div>
 
           <div className="cal-jours" aria-hidden="true">
-            {JOURS.map((jour, i) => (
+            {ui.jours.map((jour, i) => (
               <span key={`${jour}-${i}`}>{jour}</span>
             ))}
           </div>
 
-          <div className="cal-grille" role="group" aria-label="Dates de départ disponibles">
+          <div className="cal-grille" role="group" aria-label={ui.datesDisponibles}>
             {grille(cle).map((cellule, i) => {
               if (!cellule) return <span key={`vide-${i}`} className="cal-vide" />;
 
@@ -178,7 +161,7 @@ export default function DateCalendar({ dates, value, onChange, id }) {
                   type="button"
                   className={`cal-jour est-dispo${active ? " est-choisie" : ""}`}
                   aria-pressed={active}
-                  aria-label={`${libelle}${active ? " (sélectionnée)" : ""}`}
+                  aria-label={`${libelle}${active ? ` (${ui.selectionnee})` : ""}`}
                   // Toujours selectionner: recliquer sa propre date ne doit pas
                   // vider un champ obligatoire, seulement refermer.
                   onClick={() => choisir(cellule.iso)}
@@ -190,8 +173,8 @@ export default function DateCalendar({ dates, value, onChange, id }) {
           </div>
 
           <p className="cal-legende">
-            <span className="cal-pastille est-dispo" aria-hidden="true" /> Disponible
-            <span className="cal-pastille est-choisie" aria-hidden="true" /> Ton choix
+            <span className="cal-pastille est-dispo" aria-hidden="true" /> {ui.disponible}
+            <span className="cal-pastille est-choisie" aria-hidden="true" /> {ui.tonChoix}
           </p>
         </div>
       ) : null}

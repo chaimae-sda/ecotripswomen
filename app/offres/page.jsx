@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { buildCityIndex } from "../../lib/cities";
 import { getSiteContent } from "../../lib/content";
+import { siteUrl } from "../../lib/site";
+import { format } from "../../lib/ui";
 import SiteFooter from "../site-footer";
 import SiteHeader from "../site-header";
 import OffersBrowser from "./offers-browser";
@@ -16,12 +18,19 @@ const DESCRIPTION =
 export const metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: "/offres" },
+  alternates: {
+    canonical: "/offres",
+    languages: {
+      fr: `${siteUrl}/offres`,
+      en: `${siteUrl}/en/offres`,
+      "x-default": `${siteUrl}/offres`,
+    },
+  },
   openGraph: { title: TITLE, description: DESCRIPTION, url: "/offres" },
 };
 
 export default async function AllOffersPage() {
-  const { settings, offers } = await getSiteContent();
+  const { settings, offers, ui } = await getSiteContent();
   const heading = settings.allOffersTitle;
   const cities = buildCityIndex(offers);
 
@@ -43,18 +52,19 @@ export default async function AllOffersPage() {
           phone={settings.phone}
           labels={settings.labels}
           guarantees={settings.guarantees}
+          ui={ui}
         />
 
         {/* Chemin d'acces vers les pages par ville, pour les visiteuses comme
             pour Google. */}
         {cities.length > 0 && (
-          <nav className="city-links" aria-label="Voyages par ville">
-            <h2>Voyages par ville</h2>
+          <nav className="city-links" aria-label={ui.villesParVille}>
+            <h2>{ui.villesParVille}</h2>
             <ul>
               {cities.map((city) => (
                 <li key={city.slug}>
                   <Link href={`/voyages/${city.slug}`}>
-                    Voyage organisé à {city.name}
+                    {format(ui.voyageOrganiseA, { ville: city.name })}
                   </Link>
                 </li>
               ))}

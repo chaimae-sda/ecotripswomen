@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 // Visionneuse plein ecran partagee par la galerie de la page d'accueil et par
 // les photos de l'edition precedente sur la page d'un voyage.
 // Le parent garde l'index du media ouvert: `onChange(null)` referme.
-export default function Lightbox({ items, index, onChange, label = "Galerie EcoTrips Women" }) {
+export default function Lightbox({ items, index, onChange, ui, label }) {
   const touchStart = useRef(null);
   const item = items[index];
 
@@ -51,19 +51,19 @@ export default function Lightbox({ items, index, onChange, label = "Galerie EcoT
       className="lightbox"
       role="dialog"
       aria-modal="true"
-      aria-label={label}
+      aria-label={label || ui.galerie}
       onClick={close}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <button className="lightbox-close" type="button" aria-label="Fermer" onClick={close}>
+      <button className="lightbox-close" type="button" aria-label={ui.fermer} onClick={close}>
         <span aria-hidden="true">×</span>
       </button>
 
       <button
         className="lightbox-nav prev"
         type="button"
-        aria-label="Média précédent"
+        aria-label={ui.mediaPrecedent}
         onClick={(event) => {
           event.stopPropagation();
           step(-1);
@@ -90,7 +90,7 @@ export default function Lightbox({ items, index, onChange, label = "Galerie EcoT
       <button
         className="lightbox-nav next"
         type="button"
-        aria-label="Média suivant"
+        aria-label={ui.mediaSuivant}
         onClick={(event) => {
           event.stopPropagation();
           step(1);

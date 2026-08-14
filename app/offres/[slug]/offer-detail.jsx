@@ -9,13 +9,13 @@ import BookingModal from "../../booking-modal";
 import Guarantees from "../../guarantees";
 import Lightbox from "../../lightbox";
 
-export default function OfferDetail({ offer, phone, labels, guarantees }) {
+export default function OfferDetail({ offer, phone, labels, guarantees, ui }) {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [photo, setPhoto] = useState(null);
 
   return (
     <main className="offer-page">
-      <Link className="offer-back" href="/offres">
+      <Link className="offer-back" href={`${ui.langue === "en" ? "/en" : ""}/offres`}>
         <span aria-hidden="true">←</span> {labels.back}
       </Link>
 
@@ -57,7 +57,7 @@ export default function OfferDetail({ offer, phone, labels, guarantees }) {
                   key={item.src}
                   className="offer-memory"
                   type="button"
-                  aria-label={`Agrandir : ${item.alt}`}
+                  aria-label={`${ui.agrandir} : ${item.alt}`}
                   onClick={() => setPhoto(index)}
                 >
                   <Image src={item.src} alt={item.alt} fill sizes="(max-width: 980px) 33vw, 150px" />
@@ -74,19 +74,19 @@ export default function OfferDetail({ offer, phone, labels, guarantees }) {
           <ul className="offer-facts">
             {offer.date ? (
               <li>
-                <span>Dates</span>
+                <span>{ui.dates}</span>
                 <strong>{offer.date}</strong>
               </li>
             ) : null}
             {offer.departure ? (
               <li>
-                <span>Départ</span>
+                <span>{ui.depart}</span>
                 <strong>{offer.departure.replace(/^\s*d[ée]part\s*/i, "")}</strong>
               </li>
             ) : null}
             {offer.price ? (
               <li>
-                <span>Prix</span>
+                <span>{ui.prix}</span>
                 <strong className="offer-price">{offer.price}</strong>
               </li>
             ) : null}
@@ -150,6 +150,7 @@ export default function OfferDetail({ offer, phone, labels, guarantees }) {
           items={offer.previousGallery}
           index={photo}
           onChange={setPhoto}
+          ui={ui}
           label={`Photos de l'édition précédente : ${offer.title}`}
         />
       )}
@@ -160,6 +161,7 @@ export default function OfferDetail({ offer, phone, labels, guarantees }) {
           phone={phone}
           labels={labels}
           guarantees={guarantees}
+          ui={ui}
           onClose={() => setBookingOpen(false)}
         />
       )}

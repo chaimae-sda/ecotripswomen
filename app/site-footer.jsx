@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { CONTACT_MESSAGE, NAV_LINKS } from "../lib/nav";
+import { NAV_LINKS } from "../lib/nav";
 import { whatsappLink } from "../lib/whatsapp";
 import InstallApp from "./install-app";
 import SocialLinks from "./social-links";
 
 export default function SiteFooter({ settings, base = "" }) {
+  const ui = settings.ui;
   return (
     <footer className="site-footer">
       <div className="footer-claim">
@@ -24,21 +25,21 @@ export default function SiteFooter({ settings, base = "" }) {
       />
       {/* Trois groupes distincts: sans eux, les liens, les icones et le bouton
           se melangeaient sur une meme ligne qui se cassait n'importe ou. */}
-      <nav aria-label="Pied de page">
+      <nav aria-label={ui.piedDePage}>
         <SocialLinks settings={settings} />
 
         <div className="footer-links">
           {NAV_LINKS.map((link) => (
             <Link key={link.href} href={`${base}${link.href}`}>
-              {link.label}
+              {ui[link.cle]}
             </Link>
           ))}
           {/* Comme dans le bandeau du haut: Contact ouvre WhatsApp. */}
-          <a href={whatsappLink(settings.phone, CONTACT_MESSAGE)}>Contact</a>
+          <a href={whatsappLink(settings.phone, ui.contactMessage)}>{ui.contact}</a>
         </div>
 
         {/* Ne s'affiche que si l'appareil peut installer l'application. */}
-        <InstallApp />
+        <InstallApp ui={ui} />
       </nav>
     </footer>
   );

@@ -4,12 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-import { CONTACT_MESSAGE, NAV_LINKS } from "../lib/nav";
+import { NAV_LINKS } from "../lib/nav";
 import { whatsappLink } from "../lib/whatsapp";
+import LanguageSwitch from "./language-switch";
 
 // `base` vaut "/" depuis une page de voyage: les liens du menu ramenent alors a
 // la section correspondante de la page d'accueil.
 export default function SiteHeader({ settings, base = "" }) {
+  const ui = settings.ui;
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -27,33 +29,39 @@ export default function SiteHeader({ settings, base = "" }) {
           priority
         />
       </Link>
-      <nav className="main-nav" aria-label="Navigation principale">
+
+      <nav className="main-nav" aria-label={ui.navPrincipale}>
         {NAV_LINKS.map((link) => (
           <Link key={link.href} href={`${base}${link.href}`} onClick={closeMenu}>
-            {link.label}
+            {ui[link.cle]}
           </Link>
         ))}
         {/* Contact ouvre directement la conversation WhatsApp: c'est la seule
             facon de nous joindre, autant y aller en un clic. */}
-        <a href={whatsappLink(settings.phone, CONTACT_MESSAGE)} onClick={closeMenu}>
-          Contact
+        <a href={whatsappLink(settings.phone, ui.contactMessage)} onClick={closeMenu}>
+          {ui.contact}
         </a>
       </nav>
-      {/* Le bouton mene aux voyages a venir plutot qu'a WhatsApp: on ne demande
-          pas de reserver avant d'avoir montre ce qu'il y a a reserver. */}
-      <Link className="header-cta" href={`${base}#offres`} onClick={closeMenu}>
-        Réserver
-      </Link>
-      <button
-        className="menu-toggle"
-        type="button"
-        aria-label="Ouvrir le menu"
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((value) => !value)}
-      >
-        <span />
-        <span />
-      </button>
+
+      {/* Les actions sont groupees. Sans ce bloc, l'espacement general du
+          bandeau les eparpillait et poussait le menu vers la gauche au lieu de
+          le laisser au centre. */}
+      <div className="header-actions">
+        <Link className="header-cta" href={`${base}#offres`} onClick={closeMenu}>
+          {ui.reserver}
+        </Link>
+        <LanguageSwitch ui={ui} />
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label={ui.ouvrirMenu}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          <span />
+          <span />
+        </button>
+      </div>
     </header>
   );
 }

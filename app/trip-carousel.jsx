@@ -6,7 +6,7 @@ import TripCard from "./trip-card";
 
 // Bande de voyages qui defile: on la fait glisser au doigt sur mobile, et les
 // deux triangles avancent d'une carte a la fois sur ordinateur.
-export default function TripCarousel({ offers, phone, labels, guarantees }) {
+export default function TripCarousel({ offers, phone, labels, guarantees, ui }) {
   const track = useRef(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -58,6 +58,7 @@ export default function TripCarousel({ offers, phone, labels, guarantees }) {
               phone={phone}
               labels={labels}
               guarantees={guarantees}
+              ui={ui}
             />
         ))}
       </div>

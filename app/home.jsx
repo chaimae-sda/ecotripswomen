@@ -141,7 +141,7 @@ function instagramHandle(url) {
 }
 
 export default function Home({ content }) {
-  const { settings, offers, reviews, gallery } = content;
+  const { settings, offers, reviews, gallery, ui } = content;
 
   const [lightbox, setLightbox] = useState(null);
 
@@ -219,9 +219,10 @@ export default function Home({ content }) {
             phone={settings.phone}
             labels={settings.labels}
             guarantees={settings.guarantees}
+            ui={ui}
           />
           <div className="trips-more">
-            <Link className="primary-btn" href="/offres">
+            <Link className="primary-btn" href={`${ui.langue === "en" ? "/en" : ""}/offres`}>
               {settings.labels.allOffers}
             </Link>
           </div>
@@ -326,25 +327,6 @@ export default function Home({ content }) {
           </div>
         </section>
 
-        {settings.faq.length > 0 && (
-          <section className="section faq" id="faq" aria-labelledby="faq-titre">
-            <SectionTitle heading={settings.faqTitle} id="faq-titre" />
-            <div className="faq-liste">
-              {settings.faq.map((item) => (
-                /* <details>: la reponse est dans le HTML meme repliee, donc lue
-                   par Google, tout en gardant la page courte a l'ecran. */
-                <details key={item.question}>
-                  <summary>
-                    <span>{item.question}</span>
-                    <span className="faq-plus" aria-hidden="true" />
-                  </summary>
-                  <p>{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </section>
-        )}
-
         <section className="community-band">
           <div>
             {settings.communityTitle?.eyebrow ? (
@@ -368,6 +350,25 @@ export default function Home({ content }) {
             <span>{handle}</span>
           </a>
         </section>
+
+        {settings.faq.length > 0 && (
+          <section className="section faq" id="faq" aria-labelledby="faq-titre">
+            <SectionTitle heading={settings.faqTitle} id="faq-titre" />
+            <div className="faq-liste">
+              {settings.faq.map((item) => (
+                /* <details>: la reponse est dans le HTML meme repliee, donc lue
+                   par Google, tout en gardant la page courte a l'ecran. */
+                <details key={item.question}>
+                  <summary>
+                    <span>{item.question}</span>
+                    <span className="faq-plus" aria-hidden="true" />
+                  </summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="newsletter" id="contact">
           <div>
@@ -399,7 +400,7 @@ export default function Home({ content }) {
       </main>
 
       {lightbox !== null && (
-        <Lightbox items={gallery} index={lightbox} onChange={setLightbox} />
+        <Lightbox items={gallery} index={lightbox} onChange={setLightbox} ui={ui} />
       )}
 
       <SiteFooter settings={settings} />

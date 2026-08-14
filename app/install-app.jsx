@@ -36,7 +36,7 @@ function useIOS() {
 // (evenement beforeinstallprompt): on affiche alors un vrai bouton.
 // Safari sur iPhone et iPad ne propose rien automatiquement: il faut passer par
 // le menu Partager, donc on affiche la marche a suivre.
-export default function InstallApp() {
+export default function InstallApp({ ui }) {
   const [invite, setInvite] = useState(null);
   const [aideVisible, setAideVisible] = useState(false);
   const autonome = useAutonome();
@@ -82,14 +82,11 @@ export default function InstallApp() {
         onClick={() => (iOS ? setAideVisible((v) => !v) : installer())}
         aria-expanded={iOS ? aideVisible : undefined}
       >
-        <span aria-hidden="true">⬇</span> Installer l&apos;application
+        <span aria-hidden="true">⬇</span> {ui.installer}
       </button>
 
       {iOS && aideVisible ? (
-        <p className="install-help">
-          Sur iPhone : touche le bouton <strong>Partager</strong> en bas de Safari, puis{" "}
-          <strong>Sur l&apos;écran d&apos;accueil</strong>.
-        </p>
+        <p className="install-help">{ui.installerAideIOS}</p>
       ) : null}
     </div>
   );
