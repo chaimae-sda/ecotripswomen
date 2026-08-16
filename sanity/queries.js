@@ -76,6 +76,7 @@ export const siteContentQuery = `{
     color,
     "photo": photo${imageFields}
   },
+  "darija": *[_type == "darijaTexts"][0].entries[]{ source, darija },
   "gallery": *[_type == "gallery"][0].items[]{
     _type,
     alt,
