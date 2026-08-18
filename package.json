@@ -10,6 +10,7 @@
     "sanity:import": "node scripts/import-to-sanity.mjs",
     "sanity:add-offers": "node scripts/add-offers.mjs",
     "sanity:fill": "node scripts/fill-offer-details.mjs",
+    "sanity:migrate-gallery": "node scripts/migrate-previous-gallery.mjs",
     "darija:seed": "node scripts/seed-darija.mjs"
   },
   "dependencies": {

@@ -114,10 +114,13 @@ async function run() {
     for (const [photoIndex, photo] of (offer.previousGallery || []).entries()) {
       const image = await upload("image", photo.src);
       if (image) {
+        // La photo est l'image elle-meme, pas une fiche qui la contient: c'est
+        // ce que le schema attend depuis qu'on peut en deposer plusieurs d'un
+        // coup dans le Studio.
         previousGallery.push({
           _key: `offer-${index}-photo-${photoIndex}`,
           _type: "photo",
-          image,
+          asset: image.asset,
           alt: photo.alt,
         });
       }

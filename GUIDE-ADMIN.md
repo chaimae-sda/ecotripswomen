@@ -92,6 +92,27 @@ Cette page se remplit avec les champs situés sous *Message WhatsApp pré-rempli
 - *Dates de départ proposées* → reprend la date écrite sur la carte ;
 - *Villes de départ proposées* → reprend les villes du champ *Départ*, par exemple « Départ Tanger - Tétouan » donne Tanger et Tétouan.
 
+### Ajouter plusieurs photos d'un coup
+
+Dans *Photos de l'édition précédente*, tu n'as plus besoin d'ouvrir une fiche par photo. Sélectionne toutes tes photos dans ton dossier et **fais-les glisser d'un seul geste sur la liste** : elles se téléversent en même temps et s'affichent en grille.
+
+La *Description* de chaque photo reste utile (elle est lue par les personnes malvoyantes et par Google) mais elle n'est plus obligatoire : sans elle, le nom du voyage est utilisé. Tu peux donc tout déposer d'abord, et repasser écrire les descriptions ensuite.
+
+### Annulation et avance, voyage par voyage
+
+Deux champs, juste sous *Message WhatsApp pré-rempli*, règlent les conditions de **ce** voyage :
+
+| Champ | Ce que la cliente lit |
+|---|---|
+| **Annulation gratuite jusqu'à (en jours)** | « Jusqu'à 7 jours avant le départ, remboursement intégral. » |
+| **Avance à verser à la réservation** | « Verse 500 DH d'avance aujourd'hui, le reste avant le départ. » |
+
+Ces phrases s'affichent sous le bouton *Réserver* de la page du voyage **et** dans la fenêtre de réservation, en français, en anglais et en darija — la traduction est déjà écrite, tu n'as que le chiffre à saisir.
+
+> **Attention :** dès que tu remplis **un** de ces deux champs, ce voyage n'affiche plus les garanties générales de *Réglages du site*, seulement ses propres conditions. Remplis donc les deux, ou aucun.
+>
+> Laisse les deux vides et le voyage reprend les garanties générales, comme avant.
+
 > Le texte des trois voyages actuels est un **brouillon de départ** écrit pour que les pages ne soient pas vides. Relis-le et corrige-le depuis le Studio : programme, ce qui est compris, ce qu'il faut apporter.
 
 ### Le formulaire de réservation

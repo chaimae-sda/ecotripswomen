@@ -286,7 +286,7 @@ export default function BookingModal({ offer, phone, labels, guarantees = [], ui
               {sending ? ui.envoiEnCours : labels.formSubmit}
             </button>
 
-            <Guarantees items={guarantees} />
+            <Guarantees items={guarantees} offer={offer} ui={ui} />
 
             <p className="booking-note">{labels.formNote}</p>
           </div>

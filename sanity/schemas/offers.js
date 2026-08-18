@@ -114,6 +114,29 @@ export default {
                 "Le texte que la cliente enverra en cliquant sur Réserver. Laisse vide pour un message automatique.",
             },
 
+            // Les conditions de reservation propres a ce voyage. Des qu'un des
+            // deux champs est rempli, les garanties affichees sous le bouton
+            // Reserver sont celles du voyage: une phrase generale qui
+            // contredirait le voyage affiche serait pire que pas de phrase.
+            {
+              name: "cancelDays",
+              title: "Annulation gratuite jusqu'à (en jours)",
+              type: "number",
+              description:
+                "Le nombre de jours avant le départ pendant lesquels la cliente peut encore " +
+                "annuler et être remboursée. Par exemple 7. Laisse vide pour afficher les " +
+                "garanties générales réglées dans « Réglages du site ».",
+              validation: (Rule) => Rule.integer().min(0).max(365),
+            },
+            {
+              name: "deposit",
+              title: "Avance à verser à la réservation",
+              type: "string",
+              description:
+                'Écris le montant tel qu\'il doit apparaître, par exemple "500 DH". Laisse vide ' +
+                "pour afficher les garanties générales réglées dans « Réglages du site ».",
+            },
+
             // Tout ce qui suit alimente la page « Plus d'infos » du voyage.
             // Chaque champ laisse vide est simplement masque sur la page.
             {
@@ -181,35 +204,34 @@ export default {
                 "reprises automatiquement du champ Départ.",
               of: [{ type: "string" }],
             },
+            // La liste contient les photos elles-memes, et non des fiches qui
+            // contiennent une photo: c'est ce qui permet d'en deposer plusieurs
+            // d'un coup, sans ouvrir puis refermer une fiche par photo.
             {
               name: "previousGallery",
               title: "Photos de l'édition précédente",
               type: "array",
               description:
                 "Les photos de la dernière fois que ce voyage a eu lieu. Elles s'affichent sous " +
-                "l'affiche, sur la page de détail.",
+                "l'affiche, sur la page de détail. Tu peux en déposer plusieurs d'un coup: " +
+                "sélectionne-les toutes dans ton dossier et fais-les glisser sur la liste.",
+              options: { layout: "grid" },
               of: [
                 {
-                  type: "object",
+                  type: "image",
                   name: "photo",
+                  title: "Photo",
+                  options: { hotspot: true },
                   fields: [
-                    {
-                      name: "image",
-                      title: "Photo",
-                      type: "image",
-                      options: { hotspot: true },
-                      validation: (Rule) => Rule.required(),
-                    },
                     {
                       name: "alt",
                       title: "Description",
                       type: "string",
                       description:
-                        "Décris ce qu'on voit. Lu par les personnes malvoyantes et par Google.",
-                      validation: (Rule) => Rule.required(),
+                        "Décris ce qu'on voit. Lu par les personnes malvoyantes et par Google. " +
+                        "Sans description, le nom du voyage est utilisé.",
                     },
                   ],
-                  preview: { select: { title: "alt", media: "image" } },
                 },
               ],
             },

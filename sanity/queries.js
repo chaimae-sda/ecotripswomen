@@ -7,6 +7,10 @@ const imageFields = `{
 
 const headingFields = `{ eyebrow, title, highlight, text }`;
 
+// `previousGallery` accepte deux formes: la photo est l'image elle-meme (forme
+// actuelle, celle qui permet d'en deposer plusieurs d'un coup dans le Studio),
+// ou une fiche qui contient un champ `image` (forme d'origine). Le `coalesce`
+// evite de casser les voyages saisis avant le changement.
 export const siteContentQuery = `{
   "settings": *[_type == "siteSettings"][0]{
     "logo": logo${imageFields},
@@ -59,13 +63,15 @@ export const siteContentQuery = `{
     durationDays,
     destinations,
     message,
+    cancelDays,
+    deposit,
     summary,
     program[]{ title, text },
     included,
     toBring,
     departureDates,
     departureCities,
-    previousGallery[]{ alt, "image": image${imageFields} }
+    previousGallery[]{ alt, "src": coalesce(asset->url, image.asset->url) }
   },
   "reviews": *[_type == "reviews"][0].items[]{
     name,

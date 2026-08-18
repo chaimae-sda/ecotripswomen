@@ -123,7 +123,7 @@ async function run() {
           photos.push({
             _key: `photo-${index}-${photoIndex}`,
             _type: "photo",
-            image,
+            asset: image.asset,
             alt: photo.alt,
           });
         }
