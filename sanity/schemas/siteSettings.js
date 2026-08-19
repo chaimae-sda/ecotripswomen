@@ -378,17 +378,33 @@ export default {
           fields: [
             {
               name: "title",
-              title: "Titre",
+              title: "Titre (français)",
               type: "string",
               description: 'Court et clair, par exemple "Annulation gratuite".',
               validation: (Rule) => Rule.required(),
             },
             {
               name: "text",
-              title: "Précision",
+              title: "Précision (français)",
               type: "text",
               rows: 2,
               description: 'Par exemple "Jusqu\'à 7 jours avant le départ, remboursement intégral."',
+            },
+            {
+              name: "titleDarija",
+              title: "Titre en darija",
+              type: "string",
+              description:
+                'La version darija du titre, par exemple "Annulation bla flous". ' +
+                "Laisse vide pour reprendre la traduction générale.",
+            },
+            {
+              name: "textDarija",
+              title: "Précision en darija",
+              type: "text",
+              rows: 2,
+              description:
+                "La version darija de la précision. Laisse vide pour reprendre la traduction générale.",
             },
           ],
           preview: { select: { title: "title", subtitle: "text" } },
