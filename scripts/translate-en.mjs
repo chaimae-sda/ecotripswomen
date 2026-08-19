@@ -31,7 +31,7 @@ import { fileURLToPath } from "node:url";
 
 import { createClient } from "@sanity/client";
 
-import { listerTextes } from "../lib/contenu-textes.js";
+import { listerTextesParSection, SECTIONS } from "../lib/contenu-textes.js";
 import { normaliser } from "../lib/darija-corrections.js";
 import { fallback, normalize } from "../lib/normalize.js";
 import { TRADUCTIONS_EN } from "../lib/traductions-en.js";
@@ -121,7 +121,8 @@ async function run() {
   console.log("1/4  Lecture du contenu du site");
   const data = await client.fetch(siteContentQuery);
   const content = data ? normalize(data) : fallback;
-  const textes = listerTextes(content);
+  const liste = listerTextesParSection(content);
+  const textes = liste.map((entree) => entree.texte);
   console.log(`     ${textes.length} phrases affichees sur le site`);
 
   console.log("2/4  Lecture des textes anglais deja saisis");
@@ -168,21 +169,26 @@ async function run() {
   }
 
   console.log("4/4  Ecriture dans le Studio et dans lib/traductions-en.js");
-  const entries = textes.map((texte, index) => ({
-    _type: "enEntry",
-    _key: cle(texte, index),
-    source: texte,
-    english: table.get(normaliser(texte)) || "",
-  }));
+  // Une liste par onglet du Studio: la fiche se relit par partie du site.
+  const champs = Object.fromEntries(SECTIONS.map((section) => [section.name, []]));
+  liste.forEach(({ texte, section }, index) => {
+    champs[section].push({
+      _type: "enEntry",
+      _key: cle(texte, index),
+      source: texte,
+      english: table.get(normaliser(texte)) || "",
+    });
+  });
+  const entries = Object.values(champs).flat();
 
-  await client.createOrReplace({ _id: "enTexts", _type: "enTexts", entries });
+  await client.createOrReplace({ _id: "enTexts", _type: "enTexts", ...champs });
   ecrireFichier(table);
 
   const vides = entries.filter((e) => !e.english).length;
   console.log(`\nTermine: ${entries.length} textes, ${entries.length - vides} traduits.`);
   if (vides) console.log(`${vides} sans anglais: ils s'afficheront en francais.`);
   if (retirees > 0) console.log(`${retirees} retirees: leur texte francais n'existe plus.`);
-  console.log("Relis-les dans le Studio > Textes en anglais.");
+  console.log("Relis-les dans le Studio > Textes en anglais, onglet par onglet.");
 }
 
 run().catch((error) => {

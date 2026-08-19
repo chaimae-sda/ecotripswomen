@@ -5,8 +5,14 @@
 // du site. Une ligne laissee vide affiche le francais, ce qui rend visible ce
 // qui reste a traduire.
 //
+// Les phrases sont reparties en onglets, comme les Reglages du site: cent
+// quatre-vingts lignes d'un seul tenant, on ne retrouve jamais celle qu'on
+// cherche. Le decoupage est celui du site, il est calcule dans
+// lib/contenu-textes.js et non recopie ici, pour que les deux ne divergent pas.
+//
 // La liste se remplit toute seule avec `npm run darija:seed`: le script ajoute
 // les phrases nouvelles du site et ne touche jamais a une ligne deja ecrite.
+import { SECTIONS } from "../../lib/contenu-textes";
 
 const entree = {
   name: "darijaEntry",
@@ -46,24 +52,25 @@ const fiche = {
   name: "darijaTexts",
   title: "Textes en darija",
   type: "document",
-  fields: [
-    {
-      name: "entries",
-      title: "Textes du site",
-      type: "array",
-      of: [{ type: "darijaEntry" }],
-      description:
-        "Chaque phrase du site avec sa version darija. Rempli automatiquement " +
-        "par « npm run darija:seed », puis relu et corrigé ici.",
-    },
-  ],
+  groups: SECTIONS.map((section, index) => ({ ...section, default: index === 0 })),
+  fields: SECTIONS.map((section) => ({
+    name: section.name,
+    title: section.title,
+    type: "array",
+    group: section.name,
+    of: [{ type: "darijaEntry" }],
+    description:
+      "Les phrases de cette partie du site, avec leur version darija. " +
+      "Corrige ce que tu veux, puis Publish: le site suit dans la minute.",
+  })),
   preview: {
-    select: { entries: "entries" },
-    prepare: ({ entries = [] }) => {
-      const vides = entries.filter((e) => !e?.darija?.trim()).length;
+    select: Object.fromEntries(SECTIONS.map((s) => [s.name, s.name])),
+    prepare: (valeurs) => {
+      const lignes = SECTIONS.flatMap((s) => valeurs[s.name] || []);
+      const vides = lignes.filter((e) => !e?.darija?.trim()).length;
       return {
         title: "Textes en darija",
-        subtitle: `${entries.length} textes · ${vides} sans darija`,
+        subtitle: `${lignes.length} textes · ${vides} sans darija`,
       };
     },
   },

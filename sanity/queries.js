@@ -7,6 +7,11 @@ const imageFields = `{
 
 const headingFields = `{ eyebrow, title, highlight, text }`;
 
+// Les fiches de traduction rangent leurs phrases par onglet ("accueil",
+// "voyages"...). Le site n'a besoin que d'une liste: on les recolle ici.
+// `entries` est l'ancien champ unique, garde le temps qu'une fiche pas encore
+// reecrite continue de fonctionner.
+//
 // `previousGallery` accepte deux formes: la photo est l'image elle-meme (forme
 // actuelle, celle qui permet d'en deposer plusieurs d'un coup dans le Studio),
 // ou une fiche qui contient un champ `image` (forme d'origine). Le `coalesce`
@@ -82,8 +87,16 @@ export const siteContentQuery = `{
     color,
     "photo": photo${imageFields}
   },
-  "darija": *[_type == "darijaTexts"][0].entries[]{ source, darija },
-  "english": *[_type == "enTexts"][0].entries[]{ source, english },
+  "darija": *[_type == "darijaTexts"][0]{
+    "tout": coalesce(accueil, []) + coalesce(voyages, []) + coalesce(faq, []) +
+      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
+      coalesce(entries, [])
+  }.tout[]{ source, darija },
+  "english": *[_type == "enTexts"][0]{
+    "tout": coalesce(accueil, []) + coalesce(voyages, []) + coalesce(faq, []) +
+      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
+      coalesce(entries, [])
+  }.tout[]{ source, english },
   "gallery": *[_type == "gallery"][0].items[]{
     _type,
     alt,

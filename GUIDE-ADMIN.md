@@ -183,7 +183,20 @@ Le français est la source : c'est ce que tu écris dans **Réglages du site** e
 | 🇬🇧 **Textes en anglais** | La version anglaise, phrase par phrase |
 | 📝 **Textes en darija** | La version darija, phrase par phrase |
 
-Les deux fonctionnent pareil. Chaque ligne montre le **texte français** (non modifiable, c'est la clé de recherche) et sa traduction, que tu modifies librement. Les lignes pas encore traduites sont marquées `⚠️ à traduire`.
+Les deux fonctionnent pareil, et sont rangées **en onglets comme les Réglages du site**, pour que tu retrouves ta phrase sans dérouler toute la liste :
+
+| Onglet | Ce qu'il contient |
+|---|---|
+| **Accueil** | Grande image, les 4 arguments, les étapes, les chiffres |
+| **Voyages** | Tout le texte des offres : noms, présentations, programmes, ce qui est compris |
+| **Questions fréquentes** | Les questions et leurs réponses |
+| **Galerie** | Les descriptions des photos et vidéos |
+| **Titres des sections** | Les titres roses de chaque bloc, et le pied de page |
+| **Boutons et libellés** | Boutons, garanties, onglet du navigateur |
+
+Chaque ligne montre le **texte français** (non modifiable, c'est la clé de recherche) et sa traduction, que tu modifies librement. Les lignes pas encore traduites sont marquées `⚠️ à traduire`.
+
+C'est l'onglet **Voyages** que tu ouvriras le plus souvent : il contient les trois quarts du texte qui change.
 
 **Ta correction part en ligne en moins d'une minute, sans remise en ligne du site**, et elle ne sera jamais écrasée par la traduction automatique.
 

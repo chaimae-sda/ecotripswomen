@@ -24,7 +24,7 @@ import { fileURLToPath } from "node:url";
 
 import { createClient } from "@sanity/client";
 
-import { listerTextes } from "../lib/contenu-textes.js";
+import { listerTextesParSection, SECTIONS } from "../lib/contenu-textes.js";
 import { BASE_DARIJA, normaliser } from "../lib/darija-corrections.js";
 import { fallback, normalize } from "../lib/normalize.js";
 import { traduireDarija } from "../lib/translate-darija.js";
@@ -83,7 +83,8 @@ async function run() {
   console.log("1/4  Lecture du contenu du site");
   const data = await client.fetch(siteContentQuery);
   const content = data ? normalize(data) : fallback;
-  const textes = listerTextes(content);
+  const liste = listerTextesParSection(content);
+  const textes = liste.map((entree) => entree.texte);
   console.log(`     ${textes.length} phrases affichees sur le site`);
 
   console.log("2/4  Lecture des textes darija deja saisis");
@@ -118,18 +119,26 @@ async function run() {
     console.log("3/4  Aucune phrase nouvelle a traduire");
   }
 
-  const entries = textes.map((texte, index) => {
+  // Une liste par onglet du Studio: la fiche se relit par partie du site.
+  const champs = Object.fromEntries(SECTIONS.map((section) => [section.name, []]));
+  liste.forEach(({ texte, section }, index) => {
     const c = normaliser(texte);
     const darija = existantes.get(c)?.trim() || BASE_DARIJA.get(c) || ebauches.get(c) || "";
-    return { _type: "darijaEntry", _key: cle(texte, index), source: texte, darija };
+    champs[section].push({
+      _type: "darijaEntry",
+      _key: cle(texte, index),
+      source: texte,
+      darija,
+    });
   });
+  const entries = Object.values(champs).flat();
 
   const retirees = [...existantes.keys()].filter(
     (c) => !textes.some((texte) => normaliser(texte) === c)
   );
 
   console.log("4/4  Ecriture dans le Studio");
-  await client.createOrReplace({ _id: "darijaTexts", _type: "darijaTexts", entries });
+  await client.createOrReplace({ _id: "darijaTexts", _type: "darijaTexts", ...champs });
 
   const vides = entries.filter((e) => !e.darija).length;
   console.log(
@@ -138,7 +147,7 @@ async function run() {
   if (retirees.length) {
     console.log(`${retirees.length} lignes retirees: leur texte francais n'existe plus.`);
   }
-  console.log("Relis-les dans le Studio > Textes en darija.");
+  console.log("Relis-les dans le Studio > Textes en darija, onglet par onglet.");
 }
 
 run().catch((error) => {
