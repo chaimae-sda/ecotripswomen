@@ -172,6 +172,32 @@ Pour un voyage qui revient régulièrement (« chaque dimanche »), laisse *Date
 
 Le titre de cette page et les textes des boutons se modifient dans **Réglages du site → Pages voyage**.
 
+### Anglais et darija : après avoir modifié du texte
+
+Le site existe en trois langues. Le français est la source : c'est ce que tu écris dans le Studio. Les deux autres sont **calculées une fois puis stockées**, pour ne pas dépendre d'un service extérieur à chaque affichage.
+
+**Quand tu modifies du texte français** (une présentation, un programme, une nouvelle offre), lance depuis le dossier du projet :
+
+```
+pnpm run en:translate     (anglais)
+pnpm run darija:seed      (darija)
+```
+
+Chacun ne traduit que les **phrases nouvelles** et ne touche jamais à une traduction existante : ce que tu as corrigé à la main reste tel quel. Les phrases qui ne sont plus affichées nulle part sont retirées.
+
+| Langue | Où vit la traduction | Qui la corrige |
+|---|---|---|
+| 🇬🇧 **Anglais** | Le fichier `lib/traductions-en.js` | Se modifie dans le fichier |
+| 🇲🇦 **Darija** | Studio → 📝 **Textes en darija** | Se corrige dans le Studio, puis `Publish` |
+
+> **Relis toujours la darija.** L'ébauche automatique se trompe régulièrement sur les noms de lieux et les expressions imagées : « la baie d'Imsouane » est ressortie en `bayt Imsouane` (la maison d'Imsouane).
+
+**Si tu oublies de lancer ces commandes**, rien ne casse : le site traduit la phrase manquante à la volée au moment de la mise en ligne. C'est simplement moins fiable, et la darija, elle, s'affichera en français.
+
+`pnpm run en:translate` part tout seul avant chaque mise en ligne, donc l'anglais se rattrape de lui-même. La darija reste un geste volontaire, parce qu'elle demande une relecture humaine.
+
+> **Les deux moteurs.** L'anglais passe par DeepL, et bascule sur Gemini si le quota DeepL est épuisé (500 000 caractères par mois, compteur sur <https://www.deepl.com/your-account/usage>). La darija passe uniquement par Gemini : DeepL ne connaît pas le marocain.
+
 ---
 
 ## 3. Recevoir les réservations dans une Google Sheet
