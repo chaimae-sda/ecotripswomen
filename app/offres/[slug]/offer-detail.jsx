@@ -44,12 +44,7 @@ export default function OfferDetail({ offer, phone, labels, guarantees, ui }) {
             {offer.price ? <small>{offer.price}</small> : null}
           </button>
 
-          <Guarantees
-            items={guarantees}
-            offer={offer}
-            ui={ui}
-            className="offer-garanties"
-          />
+          <Guarantees items={guarantees} offer={offer} className="offer-garanties" />
         </div>
 
         {offer.previousGallery.length > 0 && (

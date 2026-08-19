@@ -114,27 +114,43 @@ export default {
                 "Le texte que la cliente enverra en cliquant sur Réserver. Laisse vide pour un message automatique.",
             },
 
-            // Les conditions de reservation propres a ce voyage. Des qu'un des
-            // deux champs est rempli, les garanties affichees sous le bouton
-            // Reserver sont celles du voyage: une phrase generale qui
-            // contredirait le voyage affiche serait pire que pas de phrase.
+            // Les engagements propres a ce voyage. C'est du texte libre et non deux
+            // chiffres a completer: la phrase part alors dans les fiches de
+            // traduction comme le reste du voyage, et se corrige en darija et en
+            // anglais dans l'onglet de ce voyage.
             {
-              name: "cancelDays",
-              title: "Annulation gratuite jusqu'à (en jours)",
-              type: "number",
+              name: "guarantees",
+              title: "Garanties de ce voyage",
+              type: "array",
               description:
-                "Le nombre de jours avant le départ pendant lesquels la cliente peut encore " +
-                "annuler et être remboursée. Par exemple 7. Laisse vide pour afficher les " +
-                "garanties générales réglées dans « Réglages du site ».",
-              validation: (Rule) => Rule.integer().min(0).max(365),
-            },
-            {
-              name: "deposit",
-              title: "Avance à verser à la réservation",
-              type: "string",
-              description:
-                'Écris le montant tel qu\'il doit apparaître, par exemple "500 DH". Laisse vide ' +
-                "pour afficher les garanties générales réglées dans « Réglages du site ».",
+                "Les engagements affichés sous le bouton « Réserver » de ce voyage : " +
+                "conditions d'annulation, avance à verser… Laisse la liste vide pour " +
+                "reprendre les garanties générales réglées dans « Réglages du site ».",
+              validation: (Rule) => Rule.max(3).warning("Au-delà de 3, le bloc devient trop long."),
+              of: [
+                {
+                  type: "object",
+                  name: "offerGuarantee",
+                  fields: [
+                    {
+                      name: "title",
+                      title: "Titre",
+                      type: "string",
+                      description: 'Court et clair, par exemple "Annulation gratuite".',
+                      validation: (Rule) => Rule.required(),
+                    },
+                    {
+                      name: "text",
+                      title: "Précision",
+                      type: "text",
+                      rows: 2,
+                      description:
+                        "Par exemple « Jusqu'à 7 jours avant le départ, remboursement intégral. »",
+                    },
+                  ],
+                  preview: { select: { title: "title", subtitle: "text" } },
+                },
+              ],
             },
 
             // Tout ce qui suit alimente la page « Plus d'infos » du voyage.
