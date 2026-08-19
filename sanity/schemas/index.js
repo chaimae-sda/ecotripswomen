@@ -1,4 +1,5 @@
 import darijaTexts from "./darijaTexts";
+import enTexts from "./enTexts";
 import gallery from "./gallery";
 import offers from "./offers";
 import reviews from "./reviews";
@@ -12,4 +13,5 @@ export const schemaTypes = [
   reviews,
   gallery,
   ...darijaTexts,
+  ...enTexts,
 ];

@@ -1,4 +1,4 @@
-// Menu du Studio: 5 fiches uniques, pas de bouton "creer un document"
+// Menu du Studio: 6 fiches uniques, pas de bouton "creer un document"
 // qui pourrait dupliquer le contenu par erreur.
 const singletons = [
   { id: "siteSettings", title: "Réglages du site", icon: "⚙️" },
@@ -6,6 +6,7 @@ const singletons = [
   { id: "reviews", title: "Avis des voyageuses", icon: "⭐" },
   { id: "gallery", title: "Galerie souvenirs", icon: "🖼️" },
   { id: "darijaTexts", title: "Textes en darija", icon: "📝" },
+  { id: "enTexts", title: "Textes en anglais", icon: "🇬🇧" },
 ];
 
 export const structure = (S) =>

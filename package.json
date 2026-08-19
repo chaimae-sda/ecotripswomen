@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/translate-en.mjs && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "sanity:import": "node scripts/import-to-sanity.mjs",

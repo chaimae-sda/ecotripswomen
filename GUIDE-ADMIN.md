@@ -51,7 +51,7 @@ L'administration s'ouvre à l'adresse du site suivie de `/studio` :
 https://ton-site.com/studio
 ```
 
-Connecte-toi avec le compte Sanity. Le menu de gauche contient quatre fiches :
+Connecte-toi avec le compte Sanity. Le menu de gauche contient six fiches :
 
 | Fiche | Ce qu'elle contient |
 |---|---|
@@ -59,6 +59,8 @@ Connecte-toi avec le compte Sanity. Le menu de gauche contient quatre fiches :
 | 🧳 **Voyages à venir** | Les cartes d'offres : affiche, nom, dates, prix, étiquette |
 | ⭐ **Avis des voyageuses** | Les avis Google affichés dans le carrousel |
 | 🖼️ **Galerie souvenirs** | Toutes les photos et vidéos, et le choix des vidéos mises en avant |
+| 🇬🇧 **Textes en anglais** | La traduction anglaise de chaque phrase, corrigeable à la main |
+| 📝 **Textes en darija** | La traduction darija de chaque phrase, corrigeable à la main |
 
 **Après chaque modification, clique sur `Publish` en bas à droite.** Le site se met à jour tout seul en moins d'une minute.
 
@@ -172,31 +174,43 @@ Pour un voyage qui revient régulièrement (« chaque dimanche »), laisse *Date
 
 Le titre de cette page et les textes des boutons se modifient dans **Réglages du site → Pages voyage**.
 
-### Anglais et darija : après avoir modifié du texte
+### Anglais et darija : corriger une traduction
 
-Le site existe en trois langues. Le français est la source : c'est ce que tu écris dans le Studio. Les deux autres sont **calculées une fois puis stockées**, pour ne pas dépendre d'un service extérieur à chaque affichage.
+Le français est la source : c'est ce que tu écris dans **Réglages du site** et **Voyages à venir**. Les deux autres langues ont chacune leur fiche, où **tu peux corriger chaque phrase à la main** :
 
-**Quand tu modifies du texte français** (une présentation, un programme, une nouvelle offre), lance depuis le dossier du projet :
+| Fiche | Langue |
+|---|---|
+| 🇬🇧 **Textes en anglais** | La version anglaise, phrase par phrase |
+| 📝 **Textes en darija** | La version darija, phrase par phrase |
+
+Les deux fonctionnent pareil. Chaque ligne montre le **texte français** (non modifiable, c'est la clé de recherche) et sa traduction, que tu modifies librement. Les lignes pas encore traduites sont marquées `⚠️ à traduire`.
+
+**Ta correction part en ligne en moins d'une minute, sans remise en ligne du site**, et elle ne sera jamais écrasée par la traduction automatique.
+
+### Après avoir modifié un texte français
+
+Les phrases nouvelles n'ont pas encore de traduction. Lance depuis le dossier du projet :
 
 ```
 pnpm run en:translate     (anglais)
 pnpm run darija:seed      (darija)
 ```
 
-Chacun ne traduit que les **phrases nouvelles** et ne touche jamais à une traduction existante : ce que tu as corrigé à la main reste tel quel. Les phrases qui ne sont plus affichées nulle part sont retirées.
-
-| Langue | Où vit la traduction | Qui la corrige |
-|---|---|---|
-| 🇬🇧 **Anglais** | Le fichier `lib/traductions-en.js` | Se modifie dans le fichier |
-| 🇲🇦 **Darija** | Studio → 📝 **Textes en darija** | Se corrige dans le Studio, puis `Publish` |
+Chacun ne traduit que les **phrases nouvelles**, retire celles qui ne sont plus affichées nulle part, et **ne touche jamais à une ligne que tu as corrigée**. Les deux remplissent leur fiche du Studio : tu n'as plus qu'à relire.
 
 > **Relis toujours la darija.** L'ébauche automatique se trompe régulièrement sur les noms de lieux et les expressions imagées : « la baie d'Imsouane » est ressortie en `bayt Imsouane` (la maison d'Imsouane).
 
-**Si tu oublies de lancer ces commandes**, rien ne casse : le site traduit la phrase manquante à la volée au moment de la mise en ligne. C'est simplement moins fiable, et la darija, elle, s'affichera en français.
-
-`pnpm run en:translate` part tout seul avant chaque mise en ligne, donc l'anglais se rattrape de lui-même. La darija reste un geste volontaire, parce qu'elle demande une relecture humaine.
+**Si tu oublies de lancer ces commandes**, rien ne casse : l'anglais se traduit à la volée au moment de l'affichage. La darija, elle, s'affiche en français en attendant.
 
 > **Les deux moteurs.** L'anglais passe par DeepL, et bascule sur Gemini si le quota DeepL est épuisé (500 000 caractères par mois, compteur sur <https://www.deepl.com/your-account/usage>). La darija passe uniquement par Gemini : DeepL ne connaît pas le marocain.
+
+### Attention : modifier un texte français efface sa traduction
+
+Le champ *Texte français* des deux fiches n'est pas modifiable, parce que c'est lui qui fait le lien avec la phrase affichée.
+
+Donc **si tu changes la phrase française d'une offre, la traduction que tu avais corrigée est perdue** : le site cherche la nouvelle phrase et ne la trouve plus. Au prochain `en:translate` ou `darija:seed`, une ligne neuve apparaît avec une traduction automatique à relire.
+
+Finalise donc le texte français d'une offre **d'abord**, corrige les traductions **ensuite**.
 
 ---
 
