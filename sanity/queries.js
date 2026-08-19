@@ -88,12 +88,12 @@ export const siteContentQuery = `{
     "photo": photo${imageFields}
   },
   "darija": *[_type == "darijaTexts"][0]{
-    "tout": coalesce(accueil, []) + coalesce(voyages, []) + coalesce(faq, []) +
+    "tout": coalesce(accueil, []) + coalesce(voyages[].textes[], []) + coalesce(faq, []) +
       coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
       coalesce(entries, [])
   }.tout[]{ source, darija },
   "english": *[_type == "enTexts"][0]{
-    "tout": coalesce(accueil, []) + coalesce(voyages, []) + coalesce(faq, []) +
+    "tout": coalesce(accueil, []) + coalesce(voyages[].textes[], []) + coalesce(faq, []) +
       coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
       coalesce(entries, [])
   }.tout[]{ source, english },

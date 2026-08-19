@@ -79,6 +79,26 @@ function cle(texte, index) {
   return `${base || "texte"}-${index}`;
 }
 
+// Ramasse les couples { source, darija } ou qu'ils soient dans la fiche: a plat,
+// range par onglet, ou groupe par voyage. La forme de la fiche a deja change
+// deux fois; une lecture qui suivrait sa structure perdrait toutes les
+// traductions le jour ou elle changera encore.
+function ramasser(valeur, sortie = new Map()) {
+  if (Array.isArray(valeur)) {
+    for (const v of valeur) ramasser(v, sortie);
+    return sortie;
+  }
+  if (!valeur || typeof valeur !== "object") return sortie;
+
+  if (typeof valeur.source === "string" && typeof valeur.darija === "string") {
+    if (valeur.darija.trim()) sortie.set(normaliser(valeur.source), valeur.darija);
+    return sortie;
+  }
+
+  for (const v of Object.values(valeur)) ramasser(v, sortie);
+  return sortie;
+}
+
 async function run() {
   console.log("1/4  Lecture du contenu du site");
   const data = await client.fetch(siteContentQuery);
@@ -88,12 +108,10 @@ async function run() {
   console.log(`     ${textes.length} phrases affichees sur le site`);
 
   console.log("2/4  Lecture des textes darija deja saisis");
-  const existantes = new Map(
-    (data?.darija || [])
-      .filter((e) => typeof e?.source === "string")
-      .map((e) => [normaliser(e.source), e.darija || ""])
-  );
-  console.log(`     ${existantes.size} lignes dans le Studio`);
+  // La fiche entiere, pas la projection de la requete: on ne veut dependre
+  // d'aucune hypothese sur sa structure.
+  const existantes = ramasser(await client.getDocument("darijaTexts"));
+  console.log(`     ${existantes.size} lignes deja traduites dans le Studio`);
 
   // Une phrase deja traduite dans le Studio, ou relue a la main dans le code,
   // n'a rien a demander a une machine.
@@ -119,19 +137,36 @@ async function run() {
     console.log("3/4  Aucune phrase nouvelle a traduire");
   }
 
-  // Une liste par onglet du Studio: la fiche se relit par partie du site.
+  // Une liste par onglet du Studio, et dans l'onglet Voyages un bloc par
+  // voyage: on ouvre le voyage a corriger sans derouler tous les autres.
   const champs = Object.fromEntries(SECTIONS.map((section) => [section.name, []]));
-  liste.forEach(({ texte, section }, index) => {
-    const c = normaliser(texte);
-    const darija = existantes.get(c)?.trim() || BASE_DARIJA.get(c) || ebauches.get(c) || "";
-    champs[section].push({
-      _type: "darijaEntry",
-      _key: cle(texte, index),
-      source: texte,
-      darija,
-    });
+  const blocs = new Map();
+
+  liste.forEach(({ texte, section, voyage }, index) => {
+    const ligne = (() => {
+      const c = normaliser(texte);
+      const darija = existantes.get(c)?.trim() || BASE_DARIJA.get(c) || ebauches.get(c) || "";
+      return { _type: "darijaEntry", _key: cle(texte, index), source: texte, darija };
+    })();
+
+    if (section !== "voyages") {
+      champs[section].push(ligne);
+      return;
+    }
+
+    if (!blocs.has(voyage)) {
+      const bloc = { _type: "darijaVoyage", _key: cle(voyage, blocs.size), voyage, textes: [] };
+      blocs.set(voyage, bloc);
+      champs.voyages.push(bloc);
+    }
+    blocs.get(voyage).textes.push(ligne);
   });
-  const entries = Object.values(champs).flat();
+
+  const entries = SECTIONS.flatMap((section) =>
+    section.name === "voyages"
+      ? champs.voyages.flatMap((bloc) => bloc.textes)
+      : champs[section.name]
+  );
 
   const retirees = [...existantes.keys()].filter(
     (c) => !textes.some((texte) => normaliser(texte) === c)

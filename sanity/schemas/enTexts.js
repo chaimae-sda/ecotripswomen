@@ -1,9 +1,9 @@
 // Les textes anglais du site, un par phrase francaise.
 //
-// Meme principe que la fiche "Textes en darija", onglets compris: ce qui est
-// ecrit ici s'affiche sur /en et l'emporte sur tout le reste. Une ligne laissee
-// vide retombe sur la traduction automatique gardee dans lib/traductions-en.js,
-// et a defaut sur le francais.
+// Meme principe que la fiche "Textes en darija", onglets et blocs par voyage
+// compris: ce qui est ecrit ici s'affiche sur /en et l'emporte sur tout le
+// reste. Une ligne laissee vide retombe sur la traduction automatique gardee
+// dans lib/traductions-en.js, et a defaut sur le francais.
 //
 // La liste se remplit toute seule avec `pnpm run en:translate`: le script
 // ajoute les phrases nouvelles et ne touche jamais a une ligne deja ecrite.
@@ -43,6 +43,50 @@ const entree = {
   },
 };
 
+// Un bloc par voyage dans l'onglet Voyages: on ouvre le voyage qu'on veut
+// corriger, et on ne voit que ses phrases.
+const voyage = {
+  name: "enVoyage",
+  title: "Voyage",
+  type: "object",
+  fields: [
+    {
+      name: "voyage",
+      title: "Voyage",
+      type: "string",
+      readOnly: true,
+      description: "Repris du nom de l'offre. Il se modifie dans « Voyages à venir ».",
+    },
+    {
+      name: "textes",
+      title: "Ses textes",
+      type: "array",
+      of: [{ type: "enEntry" }],
+      description:
+        "Toutes les phrases de ce voyage: nom, présentation, programme, ce qui est " +
+        "compris, à prévoir, descriptions des photos.",
+    },
+  ],
+  preview: {
+    select: { voyage: "voyage", textes: "textes" },
+    prepare: ({ voyage: nom, textes = [] }) => {
+      const vides = textes.filter((e) => !e?.english?.trim()).length;
+      return {
+        title: nom || "Voyage",
+        subtitle: vides
+          ? `${textes.length} textes · ${vides} sans anglais`
+          : `${textes.length} textes`,
+      };
+    },
+  },
+};
+
+// Les phrases d'un onglet, ou les blocs par voyage pour l'onglet Voyages.
+function lignesDe(valeurs, section) {
+  const contenu = valeurs[section.name] || [];
+  return section.name === "voyages" ? contenu.flatMap((bloc) => bloc?.textes || []) : contenu;
+}
+
 const fiche = {
   name: "enTexts",
   title: "Textes en anglais",
@@ -53,15 +97,18 @@ const fiche = {
     title: section.title,
     type: "array",
     group: section.name,
-    of: [{ type: "enEntry" }],
+    of: [{ type: section.name === "voyages" ? "enVoyage" : "enEntry" }],
     description:
-      "Les phrases de cette partie du site, avec leur version anglaise. " +
-      "Corrige ce que tu veux, puis Publish: le site suit dans la minute.",
+      section.name === "voyages"
+        ? "Un bloc par voyage. Ouvre celui que tu veux corriger, puis Publish: le site " +
+          "suit dans la minute."
+        : "Les phrases de cette partie du site, avec leur version anglaise. " +
+          "Corrige ce que tu veux, puis Publish: le site suit dans la minute.",
   })),
   preview: {
     select: Object.fromEntries(SECTIONS.map((s) => [s.name, s.name])),
     prepare: (valeurs) => {
-      const lignes = SECTIONS.flatMap((s) => valeurs[s.name] || []);
+      const lignes = SECTIONS.flatMap((section) => lignesDe(valeurs, section));
       const vides = lignes.filter((e) => !e?.english?.trim()).length;
       return {
         title: "Textes en anglais",
@@ -71,4 +118,4 @@ const fiche = {
   },
 };
 
-export default [entree, fiche];
+export default [entree, voyage, fiche];

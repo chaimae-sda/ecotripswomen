@@ -117,6 +117,26 @@ function cle(texte, index) {
   return `${base || "texte"}-${index}`;
 }
 
+// Ramasse les couples { source, english } ou qu'ils soient dans la fiche: a plat,
+// range par onglet, ou groupe par voyage. La forme de la fiche a deja change
+// deux fois; une lecture qui suivrait sa structure perdrait toutes les
+// traductions le jour ou elle changera encore.
+function ramasser(valeur, sortie = new Map()) {
+  if (Array.isArray(valeur)) {
+    for (const v of valeur) ramasser(v, sortie);
+    return sortie;
+  }
+  if (!valeur || typeof valeur !== "object") return sortie;
+
+  if (typeof valeur.source === "string" && typeof valeur.english === "string") {
+    if (valeur.english.trim()) sortie.set(normaliser(valeur.source), valeur.english);
+    return sortie;
+  }
+
+  for (const v of Object.values(valeur)) ramasser(v, sortie);
+  return sortie;
+}
+
 async function run() {
   console.log("1/4  Lecture du contenu du site");
   const data = await client.fetch(siteContentQuery);
@@ -130,12 +150,11 @@ async function run() {
   // sa correction redescend ensuite dans le fichier de secours.
   const connues = new Map(Object.entries(TRADUCTIONS_EN).map(([fr, en]) => [normaliser(fr), en]));
   let corrigees = 0;
-  for (const entree of data?.english || []) {
-    if (typeof entree?.source !== "string" || typeof entree?.english !== "string") continue;
-    if (!entree.english.trim()) continue;
-    const c = normaliser(entree.source);
-    if (connues.get(c) !== entree.english) corrigees += 1;
-    connues.set(c, entree.english);
+  // La fiche entiere, pas la projection de la requete: on ne veut dependre
+  // d'aucune hypothese sur sa structure.
+  for (const [c, anglais] of ramasser(await client.getDocument("enTexts"))) {
+    if (connues.get(c) !== anglais) corrigees += 1;
+    connues.set(c, anglais);
   }
   console.log(`     ${connues.size} phrases connues, dont ${corrigees} corrigees dans le Studio`);
 
@@ -169,17 +188,37 @@ async function run() {
   }
 
   console.log("4/4  Ecriture dans le Studio et dans lib/traductions-en.js");
-  // Une liste par onglet du Studio: la fiche se relit par partie du site.
+  // Une liste par onglet du Studio, et dans l'onglet Voyages un bloc par
+  // voyage: on ouvre le voyage a corriger sans derouler tous les autres.
   const champs = Object.fromEntries(SECTIONS.map((section) => [section.name, []]));
-  liste.forEach(({ texte, section }, index) => {
-    champs[section].push({
+  const blocs = new Map();
+
+  liste.forEach(({ texte, section, voyage }, index) => {
+    const ligne = {
       _type: "enEntry",
       _key: cle(texte, index),
       source: texte,
       english: table.get(normaliser(texte)) || "",
-    });
+    };
+
+    if (section !== "voyages") {
+      champs[section].push(ligne);
+      return;
+    }
+
+    if (!blocs.has(voyage)) {
+      const bloc = { _type: "enVoyage", _key: cle(voyage, blocs.size), voyage, textes: [] };
+      blocs.set(voyage, bloc);
+      champs.voyages.push(bloc);
+    }
+    blocs.get(voyage).textes.push(ligne);
   });
-  const entries = Object.values(champs).flat();
+
+  const entries = SECTIONS.flatMap((section) =>
+    section.name === "voyages"
+      ? champs.voyages.flatMap((bloc) => bloc.textes)
+      : champs[section.name]
+  );
 
   await client.createOrReplace({ _id: "enTexts", _type: "enTexts", ...champs });
   ecrireFichier(table);

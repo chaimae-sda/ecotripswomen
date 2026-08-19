@@ -196,7 +196,19 @@ Les deux fonctionnent pareil, et sont rangées **en onglets comme les Réglages 
 
 Chaque ligne montre le **texte français** (non modifiable, c'est la clé de recherche) et sa traduction, que tu modifies librement. Les lignes pas encore traduites sont marquées `⚠️ à traduire`.
 
-C'est l'onglet **Voyages** que tu ouvriras le plus souvent : il contient les trois quarts du texte qui change.
+#### L'onglet Voyages est découpé par voyage
+
+C'est celui que tu ouvriras le plus souvent : il contient les trois quarts du texte qui change. Il ne présente pas une liste de 72 lignes, mais **un bloc par voyage** :
+
+```
+Nador - Houceima          27 textes
+Plongée Belyounech        18 textes
+Taghazout - Essaouira     27 textes
+```
+
+Ouvre le voyage à corriger et tu ne vois que ses phrases : son nom, sa présentation, son programme jour par jour, ce qui est compris, à prévoir, et les descriptions de ses photos. Les blocs apparaissent et disparaissent tout seuls quand tu ajoutes ou retires un voyage.
+
+> **Une phrase partagée n'existe qu'une fois.** Si deux voyages emploient exactement la même phrase — « Transport touristique confortable » — elle est rangée sous le premier des deux, et la corriger la corrige pour les deux. C'est voulu : une phrase française n'a qu'une traduction sur tout le site.
 
 **Ta correction part en ligne en moins d'une minute, sans remise en ligne du site**, et elle ne sera jamais écrasée par la traduction automatique.
 
