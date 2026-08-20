@@ -6,5 +6,3 @@ out
 !.env.local.example
 .pnpm-store
 .vercel
-
-.vercel
