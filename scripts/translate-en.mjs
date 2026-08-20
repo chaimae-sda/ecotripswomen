@@ -32,6 +32,7 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
 
 import { listerTextesParSection, SECTIONS } from "../lib/contenu-textes.js";
+import { listerLibellesUI } from "../lib/ui.js";
 import { normaliser } from "../lib/darija-corrections.js";
 import { fallback, normalize } from "../lib/normalize.js";
 import { TRADUCTIONS_EN } from "../lib/traductions-en.js";
@@ -168,7 +169,10 @@ async function run() {
     if (deja) table.set(c, deja);
     else manquantes.push(texte);
   }
-  const retirees = connues.size - table.size;
+  // Les libelles d'interface ne viennent pas du contenu Sanity: sans cette
+  // exception ils seraient tous comptes comme retires a chaque passage.
+  const sourcesUI = new Set(listerLibellesUI("en").map(({ fr }) => normaliser(fr)));
+  const retirees = [...connues.keys()].filter((c) => !sourcesUI.has(c) && !table.has(c)).length;
 
   if (manquantes.length) {
     const caracteres = manquantes.reduce((n, t) => n + t.length, 0);
@@ -213,6 +217,17 @@ async function run() {
     }
     blocs.get(voyage).textes.push(ligne);
   });
+
+
+  // L'onglet "Interface du site" ne vient pas de Sanity mais de lib/ui.js:
+  // menus, formulaire, calendrier, filtres. Ces libelles sont deja traduits a
+  // la main, on les propose tels quels pour qu'ils deviennent corrigeables.
+  champs.interface = listerLibellesUI("en").map(({ fr, texte }, index) => ({
+    _type: "enEntry",
+    _key: cle(fr, index),
+    source: fr,
+    english: connues.get(normaliser(fr))?.trim() || texte || "",
+  }));
 
   const entries = SECTIONS.flatMap((section) =>
     section.name === "voyages"

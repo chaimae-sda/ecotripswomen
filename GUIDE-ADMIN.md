@@ -100,22 +100,20 @@ Dans *Photos de l'édition précédente*, tu n'as plus besoin d'ouvrir une fiche
 
 La *Description* de chaque photo reste utile (elle est lue par les personnes malvoyantes et par Google) mais elle n'est plus obligatoire : sans elle, le nom du voyage est utilisé. Tu peux donc tout déposer d'abord, et repasser écrire les descriptions ensuite.
 
-### Annulation et avance, voyage par voyage
+### Garanties, voyage par voyage
 
-Deux champs, juste sous *Message WhatsApp pré-rempli*, règlent les conditions de **ce** voyage :
+Sous *Message WhatsApp pré-rempli*, le champ **Garanties de ce voyage** contient les engagements affichés sous le bouton *Réserver* : conditions d'annulation, avance à verser… Chaque ligne a un **Titre** et une **Précision**, que tu écris librement.
 
-| Champ | Ce que la cliente lit |
+| | |
 |---|---|
-| **Annulation gratuite jusqu'à (en jours)** | « Jusqu'à 7 jours avant le départ, remboursement intégral. » |
-| **Avance à verser à la réservation** | « Verse 500 DH d'avance aujourd'hui, le reste avant le départ. » |
+| Titre | Annulation gratuite |
+| Précision | Jusqu'à 4 jours avant le départ, remboursement intégral. |
 
-Ces phrases s'affichent sous le bouton *Réserver* de la page du voyage **et** dans la fenêtre de réservation, en français, en anglais et en darija — la traduction est déjà écrite, tu n'as que le chiffre à saisir.
+Ces phrases s'affichent sous le bouton *Réserver* de la page du voyage **et** dans la fenêtre de réservation. Comme tout le reste, elles partent dans les fiches de traduction : tu les corriges en darija et en anglais dans l'onglet **Voyages**, sous le nom de ce voyage.
 
-> **Attention :** dès que tu remplis **un** de ces deux champs, ce voyage n'affiche plus les garanties générales de *Réglages du site*, seulement ses propres conditions. Remplis donc les deux, ou aucun.
->
-> Laisse les deux vides et le voyage reprend les garanties générales, comme avant.
+> **Laisse la liste vide** et le voyage reprend les garanties générales réglées dans *Réglages du site*.
 
-> Le texte des trois voyages actuels est un **brouillon de départ** écrit pour que les pages ne soient pas vides. Relis-le et corrige-le depuis le Studio : programme, ce qui est compris, ce qu'il faut apporter.
+Chaque garantie a aussi deux champs **En darija** facultatifs, **normalement laissés vides**. Ils ne servent que dans un cas précis : deux voyages qui ont exactement la même phrase française mais doivent dire autre chose en darija. Dès que tu en remplis un, il passe devant la fiche *Textes en darija*, et corriger la phrase là-bas n'aura plus aucun effet pour ce voyage.
 
 ### Le formulaire de réservation
 
@@ -193,8 +191,11 @@ Les deux fonctionnent pareil, et sont rangées **en onglets comme les Réglages 
 | **Galerie** | Les descriptions des photos et vidéos |
 | **Titres des sections** | Les titres roses de chaque bloc, et le pied de page |
 | **Boutons et libellés** | Boutons, garanties, onglet du navigateur |
+| **Interface du site** | Menus, formulaire de réservation, calendrier, filtres |
 
 Chaque ligne montre le **texte français** (non modifiable, c'est la clé de recherche) et sa traduction, que tu modifies librement. Les lignes pas encore traduites sont marquées `⚠️ à traduire`.
+
+> **L'onglet Interface du site** contient tout ce qui n'est pas du contenu : « Réserver », « Prénom », « Ville de départ », « Tout effacer »… Ces libellés étaient auparavant écrits dans le code et impossibles à changer. Attention aux textes qui contiennent `{n}`, `{ville}` ou `{prenom}` : ce sont des trous remplis automatiquement, garde-les tels quels sinon la phrase s'affichera mal.
 
 #### L'onglet Voyages est découpé par voyage
 

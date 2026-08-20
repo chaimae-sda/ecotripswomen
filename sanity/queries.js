@@ -88,12 +88,12 @@ export const siteContentQuery = `{
   },
   "darija": *[_type == "darijaTexts"][0]{
     "tout": coalesce(accueil, []) + coalesce(voyages[].textes[], []) + coalesce(faq, []) +
-      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
+      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) + coalesce(interface, []) +
       coalesce(entries, [])
   }.tout[]{ source, darija },
   "english": *[_type == "enTexts"][0]{
     "tout": coalesce(accueil, []) + coalesce(voyages[].textes[], []) + coalesce(faq, []) +
-      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) +
+      coalesce(galerie, []) + coalesce(titres, []) + coalesce(libelles, []) + coalesce(interface, []) +
       coalesce(entries, [])
   }.tout[]{ source, english },
   "gallery": *[_type == "gallery"][0].items[]{
